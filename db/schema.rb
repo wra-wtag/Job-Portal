@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_23_061408) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_23_062309) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,34 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_061408) do
     t.index ["industry"], name: "index_companies_on_industry"
     t.index ["slug"], name: "index_companies_on_slug", unique: true
     t.index ["status"], name: "index_companies_on_status"
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "title", null: false
+    t.bigint "company_id", null: false
+    t.bigint "posted_by_user_id", null: false
+    t.text "description", null: false
+    t.string "employment_type", null: false
+    t.decimal "salary_min", precision: 10, scale: 2
+    t.decimal "salary_max", precision: 10, scale: 2
+    t.string "currency", default: "USD"
+    t.string "status", default: "draft", null: false
+    t.boolean "visibility", default: true
+    t.datetime "published_at"
+    t.datetime "expires_at"
+    t.datetime "application_deadline"
+    t.integer "views_count", default: 0
+    t.integer "applications_count", default: 0
+    t.string "location"
+    t.boolean "is_remote", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_jobs_on_company_id"
+    t.index ["employment_type"], name: "index_jobs_on_employment_type"
+    t.index ["expires_at"], name: "index_jobs_on_expires_at"
+    t.index ["posted_by_user_id"], name: "index_jobs_on_posted_by_user_id"
+    t.index ["published_at"], name: "index_jobs_on_published_at"
+    t.index ["status"], name: "index_jobs_on_status"
   end
 
   create_table "users", force: :cascade do |t|
@@ -69,4 +97,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_061408) do
   end
 
   add_foreign_key "companies", "users", column: "approved_by_id"
+  add_foreign_key "jobs", "companies"
+  add_foreign_key "jobs", "users", column: "posted_by_user_id"
 end
