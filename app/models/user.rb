@@ -1,0 +1,71 @@
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable,
+         :confirmable
+
+  ROLES = %w[job_seeker recruiter admin].freeze
+
+  # Validations
+  validates :first_name, :last_name, presence: true
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
+  validates :role, inclusion: { in: ROLES }
+  validates :email, email: true
+
+  # Associations
+  has_many :applications, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
+  has_many :bookmarked_jobs, through: :bookmarks, source: :job
+  has_many :notifications, dependent: :destroy
+  has_many :user_skills, dependent: :destroy
+  has_many :skills, through: :user_skills
+  has_many :job_recommendations, dependent: :destroy
+  
+  # Recruiter associations
+  has_many :recruiter_memberships, dependent: :destroy
+  has_many :companies, through: :recruiter_memberships
+  has_many :posted_jobs, class_name: 'Job', foreign_key: 'posted_by_user_id', dependent: :destroy
+  
+  # Admin associations
+  has_many :approved_companies, class_name: 'Company', foreign_key: 'approved_by_id'
+
+  # ActiveStorage
+  has_one_attached :resume
+
+  # Scopes
+  scope :job_seekers, -> { where(role: 'job_seeker') }
+  scope :recruiters, -> { where(role: 'recruiter') }
+  scope :admins, -> { where(role: 'admin') }
+
+  # Methods
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def job_seeker?
+    role == 'job_seeker'
+  end
+
+  def recruiter?
+    role == 'recruiter'
+  end
+
+  def admin?
+    role == 'admin'
+  end
+
+  def primary_company
+    recruiter_memberships.where(is_primary: true).first&.company
+  end
+
+  def can_post_jobs?
+    recruiter? && companies.approved.any?
+  end
+
+  private
+
+  def generate_username
+    self.username = "#{first_name.downcase}#{last_name.downcase}#{rand(1000)}" if username.blank?
+  end
+end
