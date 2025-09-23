@@ -145,6 +145,8 @@ GEM
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
     ed25519 (1.4.0)
+    email_validator (2.2.4)
+      activemodel
     erb (5.0.2)
     erubi (1.13.1)
     et-orbi (1.3.0)
@@ -177,6 +179,12 @@ GEM
     grape-entity (1.0.1)
       activesupport (>= 3.0.0)
       multi_json (>= 1.3.2)
+    grape-swagger (2.1.2)
+      grape (>= 1.7, < 3.0)
+      rack-test (~> 2)
+    grape-swagger-rails (0.7.0)
+      ostruct
+      railties (>= 6.0.6.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     image_processing (1.14.0)
@@ -288,6 +296,10 @@ GEM
     pg (1.6.2-x86_64-darwin)
     pg (1.6.2-x86_64-linux)
     pg (1.6.2-x86_64-linux-musl)
+    phony (2.22.5)
+    phony_rails (0.15.0)
+      activesupport (>= 3.0)
+      phony (>= 2.18.12)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -519,17 +531,22 @@ DEPENDENCIES
   debug
   devise
   dotenv-rails
+  email_validator
   factory_bot_rails
   faker
   grape
   grape-entity
-  image_processing
+  grape-swagger
+  grape-swagger-rails
+  image_processing (~> 1.2)
   importmap-rails
   jbuilder
   kamal
   kaminari
   letter_opener
+  mini_magick
   pg (~> 1.1)
+  phony_rails
   propshaft
   puma (>= 5.0)
   pundit

@@ -38,7 +38,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -76,7 +76,11 @@ gem 'sidekiq-cron'
 gem 'redis'
 gem 'grape'
 gem 'grape-entity'
+gem 'grape-swagger'
+gem 'grape-swagger-rails'
 gem 'tailwindcss-rails'
-gem 'image_processing'
 gem 'kaminari'
 gem 'dotenv-rails'
+gem 'email_validator'
+gem 'phony_rails'
+gem 'mini_magick' # for image processing
