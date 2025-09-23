@@ -1,4 +1,7 @@
 class Application < ApplicationRecord
+  def self.policy_class
+    JobApplicationPolicy
+  end
   STATUSES = %w[applied viewed shortlisted rejected hired withdrawn].freeze
 
   # Validations
