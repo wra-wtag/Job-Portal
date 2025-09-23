@@ -10,9 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_23_055202) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_23_061408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.text "description"
+    t.string "location"
+    t.string "website"
+    t.string "industry"
+    t.string "size"
+    t.string "logo"
+    t.string "status", default: "pending", null: false
+    t.datetime "approved_at"
+    t.bigint "approved_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approved_by_id"], name: "index_companies_on_approved_by_id"
+    t.index ["industry"], name: "index_companies_on_industry"
+    t.index ["slug"], name: "index_companies_on_slug", unique: true
+    t.index ["status"], name: "index_companies_on_status"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -47,4 +67,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_055202) do
     t.index ["role"], name: "index_users_on_role"
     t.index ["username"], name: "index_users_on_username", unique: true
   end
+
+  add_foreign_key "companies", "users", column: "approved_by_id"
 end
