@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_23_083015) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_23_083555) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,6 +27,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_083015) do
     t.index ["job_id"], name: "index_applications_on_job_id"
     t.index ["status"], name: "index_applications_on_status"
     t.index ["user_id"], name: "index_applications_on_user_id"
+  end
+
+  create_table "bookmarks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "job_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_bookmarks_on_job_id"
+    t.index ["user_id", "job_id"], name: "index_bookmarks_on_user_id_and_job_id", unique: true
+    t.index ["user_id"], name: "index_bookmarks_on_user_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -127,6 +137,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_083015) do
 
   add_foreign_key "applications", "jobs"
   add_foreign_key "applications", "users"
+  add_foreign_key "bookmarks", "jobs"
+  add_foreign_key "bookmarks", "users"
   add_foreign_key "companies", "users", column: "approved_by_id"
   add_foreign_key "jobs", "companies"
   add_foreign_key "jobs", "users", column: "posted_by_user_id"
