@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_23_080605) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_23_083015) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,6 +77,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_080605) do
     t.index ["status"], name: "index_jobs_on_status"
   end
 
+  create_table "recruiter_memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "company_id", null: false
+    t.string "role", default: "standard", null: false
+    t.string "title"
+    t.boolean "is_primary", default: false
+    t.json "contact_info", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_recruiter_memberships_on_company_id"
+    t.index ["user_id", "company_id"], name: "index_recruiter_memberships_on_user_id_and_company_id", unique: true
+    t.index ["user_id"], name: "index_recruiter_memberships_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -116,4 +130,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_080605) do
   add_foreign_key "companies", "users", column: "approved_by_id"
   add_foreign_key "jobs", "companies"
   add_foreign_key "jobs", "users", column: "posted_by_user_id"
+  add_foreign_key "recruiter_memberships", "companies"
+  add_foreign_key "recruiter_memberships", "users"
 end
