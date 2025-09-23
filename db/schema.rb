@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_23_083555) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_23_083856) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -87,6 +87,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_083555) do
     t.index ["status"], name: "index_jobs_on_status"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "kind", null: false
+    t.string "title", null: false
+    t.text "content"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kind"], name: "index_notifications_on_kind"
+    t.index ["read_at"], name: "index_notifications_on_read_at"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "recruiter_memberships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "company_id", null: false
@@ -142,6 +155,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_083555) do
   add_foreign_key "companies", "users", column: "approved_by_id"
   add_foreign_key "jobs", "companies"
   add_foreign_key "jobs", "users", column: "posted_by_user_id"
+  add_foreign_key "notifications", "users"
   add_foreign_key "recruiter_memberships", "companies"
   add_foreign_key "recruiter_memberships", "users"
 end
