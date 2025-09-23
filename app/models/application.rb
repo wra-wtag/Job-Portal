@@ -1,0 +1,62 @@
+class Application < ApplicationRecord
+  belongs_to :job, counter_cache: :applications_count
+  belongs_to :user
+
+  STATUSES = %w[applied viewed shortlisted rejected hired withdrawn].freeze
+
+  # validations
+  validates :status, inclusion: { in: STATUSES }
+  validates :job_id, uniqueness: { scope: :user_id, message: "You have already applied for this job" }
+
+  # associations
+  has_one_attached :resume
+
+  # scopes
+  scope :recent, -> { order(applied_at: :desc) }
+  scope :by_status, ->(status) { where(status: status) }
+  scope :pending_review, -> { where(status: ['applied', 'viewed']) }
+
+  # callbacks
+  before_create :set_applied_at
+
+  # methods
+  def applied?
+    status == 'applied'
+  end
+
+  def viewed?
+    status == 'viewed'
+  end
+
+  def shortlisted?
+    status == 'shortlisted'
+  end
+
+  def rejected?
+    status == 'rejected'
+  end
+  
+  def hired?
+    status == 'hired'
+  end
+
+  def withdrawn?
+    status == 'withdrawn'
+  end
+
+  def status_humanized
+    status.humanize
+  end
+
+  def can_withdraw?
+    %w[applied viewed].include?(status)
+  end
+
+  def withdraw!
+    update!(status: 'withdrawn')
+  end
+
+  def set_applied_at
+    self.applied_at = Time.current
+  end
+end
