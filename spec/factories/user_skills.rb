@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user_skill do
-    user { nil }
-    skill { nil }
-    experience_years { 1 }
+    association :user
+    association :skill
+    experience_years { rand(0..10) }
   end
 end

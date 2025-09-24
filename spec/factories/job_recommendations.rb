@@ -1,10 +1,19 @@
 FactoryBot.define do
   factory :job_recommendation do
-    user { nil }
-    payload { "" }
-    algorithm_version { "MyString" }
-    generated_at { "2025-09-23 15:21:10" }
-    scheduled_for { "2025-09-23 15:21:10" }
-    sent_at { "2025-09-23 15:21:10" }
+    association :user
+
+    payload { { 'job_ids' => [] } }
+    algorithm_version { "v1.0" }
+    generated_at { Time.current }
+    scheduled_for { Date.current }
+    sent_at { nil }
+
+    trait :sent do
+      sent_at { Time.current }
+    end
+
+    trait :pending do
+      sent_at { nil }
+    end
   end
 end
