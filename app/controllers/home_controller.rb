@@ -22,8 +22,6 @@ class HomeController < ApplicationController
       else
         company_pending_approval_path
       end
-    when "job_seeker"
-      jobs_path
     else
       root_path
     end
