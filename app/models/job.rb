@@ -4,31 +4,26 @@ class Job < ApplicationRecord
   EMPLOYMENT_TYPES = %w[full_name part_time contract internship temporary].freeze
   STATUSES = %w[draft published closed].freeze
 
-  # validations
   validates :title, :description, presence: true
   validates :employment_type, inclusion: { in: EMPLOYMENT_TYPES }
   validates :status, inclusion: { in: STATUSES }
   validates :salary_min, :salary_max, numericality: { greater_than: 0 }, allow_blank: true
   validate :salary_max_greater_than_min
 
-  # associations
   has_many :applications, dependent: :destroy
   has_many :applicants, through: :applications, source: :user
   has_many :bookmarks, dependent: :destroy
   has_many :job_skills, dependent: :destroy
   has_many :skills, through: :job_skills
 
-  # Scopes
   scope :published, -> { where(status: 'published') }
   scope :active, -> { published.where('expires_at > ? OR expires_at IS NULL', Time.current) }
   scope :by_employment_type, ->(type) { where(employment_type: type) }
   scope :with_salary_range, ->(min, max) { where(salary_min: min..max) }
   scope :recent, -> { order(created_at: :desc) }
 
-  # callbacks
   before_save :set_published_at, if: :status_changed_to_published?
-
-  # methods
+  
   def published?
     status == 'published'
   end

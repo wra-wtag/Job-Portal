@@ -3,11 +3,9 @@ class RecruiterMembership < ApplicationRecord
   belongs_to :company
   ROLES = %w[standard manager].freeze
 
-  # validations
   validates :role, inclusion: { in: ROLES }
   validates :user_id, uniqueness: { scope: :company_id }
-
-  # scopes
+  
   scope :managers, -> { where(role: 'manager') }
   scope :standard, -> { where(role: 'standard') }
   scope :primary, -> { where(is_primary: true) }

@@ -4,22 +4,17 @@ class Application < ApplicationRecord
 
   STATUSES = %w[applied viewed shortlisted rejected hired withdrawn].freeze
 
-  # validations
   validates :status, inclusion: { in: STATUSES }
   validates :job_id, uniqueness: { scope: :user_id, message: "You have already applied for this job" }
 
-  # associations
   has_one_attached :resume
 
-  # scopes
   scope :recent, -> { order(applied_at: :desc) }
   scope :by_status, ->(status) { where(status: status) }
   scope :pending_review, -> { where(status: ['applied', 'viewed']) }
-
-  # callbacks
+  
   before_create :set_applied_at
 
-  # methods
   def applied?
     status == 'applied'
   end
