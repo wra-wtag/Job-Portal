@@ -59,4 +59,8 @@ class Application < ApplicationRecord
   def set_applied_at
     self.applied_at = Time.current
   end
+
+  def self.policy_class
+    JobApplicationPolicy
+  end
 end
