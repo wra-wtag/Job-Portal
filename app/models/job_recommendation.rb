@@ -1,16 +1,12 @@
 class JobRecommendation < ApplicationRecord
-  # Validations
   validates :payload, :algorithm_version, :generated_at, presence: true
 
-  # Associations
   belongs_to :user
 
-  # Scopes
   scope :pending, -> { where(sent_at: nil) }
   scope :sent, -> { where.not(sent_at: nil) }
   scope :scheduled_for_today, -> { where(scheduled_for: Date.current.beginning_of_day..Date.current.end_of_day) }
 
-  # Methods
   def sent?
     sent_at.present?
   end

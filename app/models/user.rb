@@ -6,13 +6,11 @@ class User < ApplicationRecord
   
   ROLES = %w[job_seeker recruiter admin].freeze
 
-  # validations
   validates :first_name, :last_name, presence: true
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates :role, inclusion: { in: ROLES }
   validates :email, email: true
 
-  # associations
   has_many :applications, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :user_skills, dependent: :destroy
@@ -21,23 +19,18 @@ class User < ApplicationRecord
   has_many :skills, through: :user_skills
   has_many :job_recommendations, dependent: :destroy
 
-  # recruiter associations
   has_many :recruiter_memberships, dependent: :destroy
   has_many :companies, through: :recruiter_memberships
   has_many :posted_jobs, class_name: 'Job', foreign_key: 'posted_by_user_id', dependent: :destroy
-  
-  # Admin associations
+
   has_many :approved_companies, class_name: 'Company', foreign_key: 'approved_by_id'
 
-  # ActiveStorage
   has_one_attached :resume
 
-  # Scopes
   scope :job_seekers, -> { where(role: 'job_seeker') }
   scope :recruiters, -> { where(role: 'recruiter') }
   scope :admins, -> { where(role: 'admin') }
-
-  # Methods
+  
   def full_name
     "#{first_name} #{last_name}"
   end

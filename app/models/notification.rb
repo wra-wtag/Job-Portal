@@ -2,12 +2,10 @@ class Notification < ApplicationRecord
   belongs_to :user
 
   KINDS = %w[new_job_application application_update job_recommendation system_announcement].freeze
-
-  # validations
+  
   validates :kind, inclusion: { in: KINDS }
   validates :title, presence: true
 
-  # scopes
   scope :unread, -> { where(read_at: nil) }
   scope :read, -> { where.not(read_at: nil) }
   scope :recent, -> { order(created_at: :desc) }
