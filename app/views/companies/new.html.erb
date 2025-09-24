@@ -1,0 +1,86 @@
+<div class="max-w-3xl mx-auto py-8">
+  <div class="bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-6">Register Your Company</h1>
+      
+      <%= form_with model: @company, local: true, class: "space-y-6" do |f| %>
+        <% if @company.errors.any? %>
+          <div class="bg-red-50 border border-red-200 rounded-md p-4">
+            <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+            <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+              <% @company.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div>
+          <%= f.label :name, class: "block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :name, required: true, 
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+
+        <div>
+          <%= f.label :description, class: "block text-sm font-medium text-gray-700" %>
+          <%= f.text_area :description, rows: 4,
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :location, class: "block text-sm font-medium text-gray-700" %>
+            <%= f.text_field :location,
+                class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+          </div>
+          
+          <div>
+            <%= f.label :website, class: "block text-sm font-medium text-gray-700" %>
+            <%= f.url_field :website, placeholder: "https://",
+                class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :industry, class: "block text-sm font-medium text-gray-700" %>
+            <%= f.select :industry, 
+                ['Technology', 'Healthcare', 'Finance', 'Education', 'Retail', 'Manufacturing', 'Other'].map { |i| [i, i] },
+                { prompt: 'Select Industry' },
+                class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+          </div>
+          
+          <div>
+            <%= f.label :size, "Company Size", class: "block text-sm font-medium text-gray-700" %>
+            <%= f.select :size, Company::SIZES.map { |s| [s, s] },
+                { prompt: 'Select Size' },
+                class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :logo, class: "block text-sm font-medium text-gray-700" %>
+          <%= f.file_field :logo, accept: "image/*",
+              class: "mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none" %>
+          <p class="mt-1 text-sm text-gray-500">PNG, JPG up to 2MB</p>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-md">
+          <h3 class="text-sm font-medium text-gray-900 mb-2">What happens next?</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Your company application will be reviewed by our admin team</li>
+            <li>• You'll receive an email notification once approved</li>
+            <li>• After approval, you can start posting jobs immediately</li>
+          </ul>
+        </div>
+
+        <div class="flex justify-end space-x-3">
+          <%= link_to "Cancel", root_path, 
+              class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+          <%= f.submit "Submit for Approval", 
+              class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
