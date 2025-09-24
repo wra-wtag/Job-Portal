@@ -1,15 +1,26 @@
 FactoryBot.define do
   factory :company do
-    name { "MyString" }
-    slug { "MyString" }
-    description { "MyText" }
-    location { "MyString" }
-    website { "MyString" }
-    industry { "MyString" }
-    size { "MyString" }
-    logo { "MyString" }
-    status { "MyString" }
-    approved_at { "2025-09-23 12:14:08" }
-    approved_by { nil }
+    name { Faker::Company.name }
+    slug { name.parameterize }
+    description { Faker::Lorem.paragraph(sentence_count: 3) }
+    location { Faker::Address.city }
+    website { Faker::Internet.url }
+    industry { ['Technology', 'Healthcare', 'Finance', 'Education', 'Retail'].sample }
+    size { Company::SIZES.sample }
+    status { 'pending' }
+
+    trait :approved do
+      status { 'approved' }
+      approved_at { Time.current }
+      association :approved_by, factory: [:user, :admin]
+    end
+
+    trait :pending do
+      status { 'pending' }
+    end
+    
+    trait :rejected do
+      status { 'rejected' }
+    end
   end
 end

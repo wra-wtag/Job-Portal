@@ -1,9 +1,22 @@
 FactoryBot.define do
   factory :application do
-    job { nil }
-    user { nil }
-    cover_letter { "MyText" }
-    status { "MyString" }
-    applied_at { "2025-09-23 14:06:05" }
+    cover_letter { Faker::Lorem.paragraph(sentence_count: 3) }
+    status { 'applied' }
+    applied_at { Time.current }
+    
+    association :job, :published
+    association :user, :job_seeker
+
+    trait :viewed do
+      status { 'viewed' }
+    end
+
+    trait :shortlisted do
+      status { 'shortlisted' }
+    end
+
+    trait :rejected do
+      status { 'rejected' }
+    end
   end
 end

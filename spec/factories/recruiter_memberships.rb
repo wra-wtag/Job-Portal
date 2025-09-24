@@ -1,10 +1,18 @@
 FactoryBot.define do
   factory :recruiter_membership do
-    user { nil }
-    company { nil }
-    role { "MyString" }
-    title { "MyString" }
+    role { 'standard' }
+    title { Faker::Job.title }
     is_primary { false }
-    contact_info { "" }
+    
+    association :user, :recruiter
+    association :company, :approved
+
+    trait :manager do
+      role { 'manager' }
+    end
+
+    trait :primary do
+      is_primary { true }
+    end
   end
 end

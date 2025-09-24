@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :skill do
-    name { "MyString" }
-    category { "MyString" }
+    name { Faker::ProgrammingLanguage.name }
+    category { ['Programming', 'Framework', 'Database', 'Tool', 'Soft Skill'].sample }
   end
 end
