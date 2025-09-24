@@ -1,9 +1,17 @@
 FactoryBot.define do
   factory :notification do
-    user { nil }
-    kind { "MyString" }
-    title { "MyString" }
-    content { "MyText" }
-    read_at { "2025-09-23 14:38:56" }
+    association :user
+
+    title { Faker::Lorem.sentence(word_count: 5) }
+    kind { Notification::KINDS.sample }
+    read_at { nil }
+
+    trait :read do
+      read_at { Time.current }
+    end
+
+    trait :unread do
+      read_at { nil }
+    end
   end
 end

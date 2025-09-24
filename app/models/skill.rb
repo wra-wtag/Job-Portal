@@ -14,6 +14,8 @@ class Skill < ApplicationRecord
 
     # Methods
     def self.find_or_create_by_name(name)
-        find_or_create_by(name: name.strip.titleize)
+        normalized_name = name.strip.titleize
+        skill = Skill.where("LOWER(name) = ?", normalized_name.downcase).first
+        skill || Skill.create!(name: normalized_name)
     end
 end

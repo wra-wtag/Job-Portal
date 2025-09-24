@@ -1,22 +1,34 @@
 FactoryBot.define do
   factory :application do
-    cover_letter { Faker::Lorem.paragraph(sentence_count: 3) }
-    status { 'applied' }
-    applied_at { Time.current }
+    association :job
+    association :user
     
-    association :job, :published
-    association :user, :job_seeker
+    cover_letter { Faker::Lorem.paragraph(sentence_count: 3) }
+    status { Application::STATUSES.sample }
+    applied_at { Time.current }
+
+    trait :applied do
+      status { "applied" }
+    end
 
     trait :viewed do
-      status { 'viewed' }
+      status { "viewed" }
     end
 
     trait :shortlisted do
-      status { 'shortlisted' }
+      status { "shortlisted" }
     end
 
     trait :rejected do
-      status { 'rejected' }
+      status { "rejected" }
+    end
+
+    trait :hired do
+      status { "hired" }
+    end
+
+    trait :withdrawn do
+      status { "withdrawn" }
     end
   end
 end
