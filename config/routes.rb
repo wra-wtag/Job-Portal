@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get "jobs/index"
+  get "jobs/show"
+  get "jobs/apply"
+  get "jobs/submit_application"
+  get "jobs/bookmark"
+  get "jobs/unbookmark"
   devise_for :users, controllers: {
     registrations: "users/registrations",
     sessions: "users/sessions"
