@@ -1,6 +1,6 @@
 class JobsController < ApplicationController
   before_action :set_job, only: [:show, :apply, :submit_application, :bookmark, :unbookmark]
-  before_action :ensure_job_seeker, only: [:apply, :submit_application, :bookmark, :unbookmark]
+  before_action :ensure_job_seeker!, only: [:apply, :submit_application, :bookmark, :unbookmark]
   skip_before_action :authenticate_user!, only: [:index, :show]
 
   def index
@@ -27,8 +27,8 @@ class JobsController < ApplicationController
   def show
     @job.increment_views!
     @is_bookmarked = user_signed_in? && current_user.bookmarks.exists?(job: @job)
-    @has_applied = user_signed_in? && current_user.applications.exists(job: @job)
-    @application = current_user&.application&.find_by(job: @job)
+    @has_applied = user_signed_in? && current_user.applications.exists?(job: @job)
+    @application = current_user&.applications&.find_by(job: @job)
 
     @related_jobs = Job.published.active
                                  .where(company: @job.company)
@@ -59,7 +59,7 @@ class JobsController < ApplicationController
   end
 
   def submit_application
-    authorize @job, :apply
+    authorize @job, :apply?
 
     if current_user.applications.exists?(job: @job)
       redirect_to job_path(@job), alert: "You have already applied for this job."

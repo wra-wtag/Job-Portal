@@ -1,7 +1,7 @@
 class Job < ApplicationRecord
   belongs_to :company
   belongs_to :posted_by_user, class_name: 'User'
-  EMPLOYMENT_TYPES = %w[full_name part_time contract internship temporary].freeze
+  EMPLOYMENT_TYPES = %w[full_time part_time contract internship temporary].freeze
   STATUSES = %w[draft published closed].freeze
 
   validates :title, :description, presence: true
