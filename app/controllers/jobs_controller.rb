@@ -4,14 +4,19 @@ class JobsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
 
   def index
-    @jobs = policy_scope(job).published.active.includes(:company, :skills)
+    @jobs = policy_scope(Job).published.active.includes(:company, :skills)
 
     @jobs = apply_filters(@jobs)
     @jobs = apply_search(@jobs) if params[:search].present?
     @jobs = apply_sorting(@jobs)
     @jobs = @jobs.page(params[:page]).per(12)
-
-    @employment_type = Job::EMPLOYMENT_TYPES.map { |type| [type.humanize, type] }
+    @employment_types = [
+      ['Full Time', 'full_time'],
+      ['Part Time', 'part_time'],
+      ['Contract', 'contract'],
+      ['Internship', 'internship'],
+      ['Temporary', 'temporary']
+    ]
     @industries = Company.distinct.pluck(:industry).compact.sort
     @locations = Job.distinct.pluck(:location).compact.sort
 
