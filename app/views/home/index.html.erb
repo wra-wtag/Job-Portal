@@ -1,36 +1,43 @@
 <div class="bg-gray-50 min-h-screen">
 
   <!-- Hero Section -->
-  <section class="relative bg-indigo-900 text-white">
-    <div class="max-w-6xl mx-auto px-6 py-24 text-center">
-      <h1 class="text-5xl sm:text-6xl font-extrabold leading-tight">
+  <section class="relative bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6 py-32 text-center relative z-10">
+      <h1 class="text-5xl sm:text-6xl font-extrabold leading-tight drop-shadow-lg">
         Discover Your Dream Job Today
       </h1>
-      <p class="mt-6 text-lg sm:text-xl text-indigo-200">
-        Join thousands of professionals finding the perfect job opportunities from top companies.
+      <p class="mt-6 text-lg sm:text-xl text-indigo-200 drop-shadow-md">
+        Join thousands of professionals finding the perfect job opportunities from top tech companies.
       </p>
       
-      <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+      <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
         <%= link_to "Search Jobs", jobs_path,
-            class: "bg-white text-indigo-900 font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-100 transition" %>
+            class: "bg-white text-indigo-900 font-semibold px-8 py-3 rounded-2xl shadow-xl hover:scale-105 transform transition" %>
         <%= link_to "Sign Up", new_user_registration_path,
-            class: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition" %>
+            class: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-2xl shadow-xl hover:scale-105 transform transition" %>
       </div>
+    </div>
+
+    <!-- Optional subtle background decoration -->
+    <div class="absolute inset-0 opacity-20">
+      <svg class="w-full h-full" fill="none" viewBox="0 0 1440 320">
+        <path fill="white" fill-opacity="0.05" d="M0,64L48,101.3C96,139,192,213,288,234.7C384,256,480,224,576,208C672,192,768,192,864,202.7C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+      </svg>
     </div>
   </section>
 
   <!-- Featured Jobs Section -->
-  <section class="max-w-7xl mx-auto px-6 py-16">
-    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Latest Jobs</h2>
+  <section class="max-w-7xl mx-auto px-6 py-20">
+    <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center">Latest Tech Jobs</h2>
 
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       <% @latest_jobs.each do |job| %>
-        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition">
-          <div class="p-6 flex flex-col gap-4">
-            <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
+        <div class="bg-white border border-gray-200 rounded-3xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1">
+          <div class="p-6 flex flex-col gap-3">
+            <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600 transition">
               <%= link_to job.title, job_path(job) %>
             </h3>
-            <p class="text-sm text-gray-600">
+            <p class="text-sm text-gray-500">
               <%= job.company.name %> • <%= job.location %>
               <% if job.is_remote %>
                 • <span class="text-green-600 font-medium">Remote</span>
@@ -38,47 +45,29 @@
             </p>
             <div class="flex flex-wrap gap-2 mt-2">
               <% job.skills.limit(3).each do |skill| %>
-                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                <span class="px-3 py-1 text-xs font-medium rounded-full bg-indigo-50 text-indigo-700">
                   <%= skill.name %>
                 </span>
               <% end %>
             </div>
             <%= link_to "View Job", job_path(job),
-                class: "mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow" %>
+                class: "mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl shadow-lg transition" %>
           </div>
         </div>
       <% end %>
-    </div>
 
-    <% if @latest_jobs.empty? %>
-      <p class="text-center text-gray-600 mt-8">No jobs available at the moment. Check back soon!</p>
-    <% end %>
-  </section>
-
-  <!-- Companies Section -->
-  <section class="bg-gray-100 py-16">
-    <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Top Companies Hiring</h2>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
-        <% @featured_companies.each do |company| %>
-          <div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-center h-24 w-24">
-            <% if company.logo.attached? %>
-              <%= image_tag company.logo.variant(resize_to_limit: [80, 80]), class: "object-contain h-full w-full" %>
-            <% else %>
-              <span class="text-gray-600 font-bold"><%= company.name.first.upcase %></span>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
+      <% if @latest_jobs.empty? %>
+        <p class="text-center text-gray-500 mt-8 col-span-full">No jobs available at the moment. Check back soon!</p>
+      <% end %>
     </div>
   </section>
 
   <!-- Call to Action Section -->
-  <section class="max-w-6xl mx-auto px-6 py-16 text-center">
-    <h2 class="text-3xl font-bold text-gray-900">Ready to Start Your Career?</h2>
-    <p class="mt-4 text-gray-700">Sign up today and start applying to your dream jobs.</p>
+  <section class="max-w-6xl mx-auto px-6 py-20 text-center">
+    <h2 class="text-3xl font-bold text-gray-900 mb-4">Ready to Start Your Tech Career?</h2>
+    <p class="text-gray-700 mb-8">Sign up today and start applying to your dream jobs from top software companies.</p>
     <%= link_to "Create Account", new_user_registration_path,
-        class: "mt-6 inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition" %>
+        class: "inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-2xl shadow-xl transition transform hover:scale-105" %>
   </section>
+
 </div>
