@@ -1,87 +1,71 @@
-<!-- app/views/jobs/index.html.erb -->
-<div class="bg-gray-50">
-  <!-- Hero Section -->
-  <div class="relative bg-indigo-900">
-    <div class="absolute inset-0">
-      <img class="w-full h-full object-cover" 
-           src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80" 
-           alt="Hero background">
-      <div class="absolute inset-0 bg-indigo-900/80"></div>
-    </div>
-    <div class="relative max-w-4xl mx-auto py-24 px-6 text-center">
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white">
-        Find Your Dream Job
-      </h1>
-      <p class="mt-6 text-lg text-indigo-100">
-        Discover <%= @total_jobs %> opportunities from <%= @companies_hiring %> companies hiring now.
-      </p>
-    </div>
+<div class="bg-gray-50 min-h-screen">
 
-    <!-- Search Form -->
-    <div class="relative max-w-5xl mx-auto -mt-8 px-6 pb-8">
-      <%= form_with url: jobs_path, method: :get, local: true do |f| %>
-        <div class="bg-white rounded-2xl shadow-xl p-6">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="md:col-span-2">
-              <%= f.text_field :search,
-                value: params[:search],
-                placeholder: "Job title, company, or keywords...",
-                class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
-            </div>
-            <div>
-              <%= f.text_field :location,
-                value: params[:location],
-                placeholder: "Location",
-                class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
-            </div>
-            <div>
-              <%= f.submit "Search Jobs", 
-                class: "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-            </div>
-          </div>
+  <!-- Search & Filters Section -->
+  <section class="max-w-6xl mx-auto px-6 py-12">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">Find Your Dream Job</h1>
 
-          <!-- Advanced Filters -->
-          <details class="mt-4">
-            <summary class="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-800">
-              Advanced Filters
-            </summary>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-200">
-              <%= f.select :employment_type, @employment_types,
-                  { prompt: 'Employment Type', selected: params[:employment_type] },
-                  { class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" } %>
-
-              <%= f.select :industry, @industries.map { |i| [i, i] },
-                  { prompt: 'Industry', selected: params[:industry] },
-                  { class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" } %>
-
-              <%= f.number_field :salary_min,
-                  value: params[:salary_min],
-                  placeholder: "Min Salary",
-                  class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
-
-              <label class="flex items-center space-x-2">
-                <%= f.check_box :remote,
-                    { class: "rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500",
-                      checked: params[:remote] == 'true' },
-                    'true', '' %>
-                <span class="text-sm text-gray-700">Remote Only</span>
-              </label>
-            </div>
-          </details>
+    <%= form_with url: jobs_path, method: :get, local: true, class: "bg-white rounded-3xl shadow-xl p-6" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+        <div class="md:col-span-2">
+          <%= f.text_field :search,
+            value: params[:search],
+            placeholder: "Job title, company, or keywords...",
+            class: "w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
         </div>
-      <% end %>
-    </div>
-  </div>
+
+        <div>
+          <%= f.text_field :location,
+            value: params[:location],
+            placeholder: "Location",
+            class: "w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
+        </div>
+
+        <div>
+          <%= f.select :employment_type, @employment_types, { prompt: 'Employment Type', selected: params[:employment_type] },
+            class: "w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
+        </div>
+
+        <div>
+          <%= f.submit "Search Jobs",
+            class: "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition duration-200" %>
+        </div>
+      </div>
+
+      <!-- Advanced Filters -->
+      <details class="mt-4">
+        <summary class="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-800 flex items-center justify-center">
+          Advanced Filters 
+          <svg class="ml-1 w-4 h-4 inline-block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </summary>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-200">
+          <%= f.select :industry, @industries.map { |i| [i, i] }, { prompt: 'Industry', selected: params[:industry] },
+            class: "w-full border border-gray-300 rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
+
+          <%= f.number_field :salary_min, value: params[:salary_min], placeholder: "Min Salary",
+            class: "w-full border border-gray-300 rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
+
+          <label class="flex items-center space-x-2">
+            <%= f.check_box :remote,
+                { class: "rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500",
+                  checked: params[:remote] == 'true' },
+                'true', '' %>
+            <span class="text-sm text-gray-700">Remote Only</span>
+          </label>
+        </div>
+      </details>
+    <% end %>
+  </section>
 
   <!-- Results Section -->
-  <div class="max-w-7xl mx-auto px-6 py-12">
-    <!-- Filters & Sorting -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 space-y-4 md:space-y-0">
+  <section class="max-w-7xl mx-auto px-6 py-12">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
       <h2 class="text-xl font-semibold text-gray-900">
         <%= @jobs.total_count %> Jobs Found
       </h2>
-      
-      <div class="flex items-center space-x-4">
+
+      <div class="flex items-center space-x-4 mt-4 md:mt-0">
         <%= form_with url: jobs_path, method: :get, local: true, class: "flex items-center space-x-2" do |f| %>
           <%= hidden_field_tag :search, params[:search] %>
           <%= hidden_field_tag :location, params[:location] %>
@@ -89,17 +73,14 @@
           <%= hidden_field_tag :industry, params[:industry] %>
           <%= hidden_field_tag :salary_min, params[:salary_min] %>
           <%= hidden_field_tag :remote, params[:remote] %>
-          
+
           <label class="text-sm text-gray-600">Sort by:</label>
           <%= f.select :sort,
-              [['Newest', 'newest'], ['Oldest', 'oldest'],
-               ['Highest Salary', 'salary_high'], ['Lowest Salary', 'salary_low'],
-               ['Company Name', 'company']],
+              [['Newest', 'newest'], ['Oldest', 'oldest'], ['Highest Salary', 'salary_high'], ['Lowest Salary', 'salary_low'], ['Company Name', 'company']],
               { selected: params[:sort] || 'newest' },
-              { class: "rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500",
-                onchange: "this.form.submit();" } %>
+              { class: "rounded-xl border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm", onchange: "this.form.submit();" } %>
         <% end %>
-        
+
         <%= link_to jobs_path, class: "text-sm text-indigo-600 hover:text-indigo-900" do %>
           Clear Filters
         <% end %>
@@ -109,26 +90,26 @@
     <!-- Job Listings -->
     <div class="grid gap-6">
       <% @jobs.each do |job| %>
-        <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition">
           <div class="p-6 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-6">
             <!-- Left: Job Info -->
             <div class="flex-1">
-              <div class="flex items-center">
+              <div class="flex items-center gap-4">
                 <% if job.company.logo.attached? %>
-                  <%= image_tag job.company.logo, class: "h-12 w-12 rounded-lg object-cover mr-4" %>
+                  <%= image_tag job.company.logo.variant(resize_to_limit: [60, 60]), class: "h-14 w-14 rounded-lg object-cover" %>
                 <% else %>
-                  <div class="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center mr-4">
-                    <span class="text-sm font-semibold text-gray-600"><%= job.company.name.first.upcase %></span>
+                  <div class="h-14 w-14 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span class="text-lg font-semibold text-gray-600"><%= job.company.name.first.upcase %></span>
                   </div>
                 <% end %>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">
-                    <%= link_to job.title, job_path(job), class: "hover:text-indigo-600" %>
+                  <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
+                    <%= link_to job.title, job_path(job) %>
                   </h3>
                   <p class="text-sm text-gray-600">
                     <%= job.company.name %> • <%= job.location %>
                     <% if job.is_remote %>
-                      • <span class="text-green-600">Remote</span>
+                      • <span class="text-green-600 font-medium">Remote</span>
                     <% end %>
                   </p>
                 </div>
@@ -178,7 +159,7 @@
                 <% end %>
 
                 <%= link_to "View Details", job_path(job),
-                    class: "px-3 py-2 border border-gray-300 text-sm rounded-md bg-white text-gray-700 hover:bg-gray-50 shadow-sm" %>
+                    class: "px-3 py-2 border border-gray-300 text-sm rounded-xl bg-white text-gray-700 hover:bg-gray-50 shadow-sm" %>
               </div>
             </div>
           </div>
@@ -189,7 +170,7 @@
         <div class="text-center py-12">
           <p class="text-gray-600">No jobs found. Try adjusting your filters.</p>
           <%= link_to "View All Jobs", jobs_path,
-              class: "mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md shadow" %>
+              class: "mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl shadow-lg transition" %>
         </div>
       <% end %>
     </div>
@@ -198,5 +179,5 @@
     <div class="mt-10 flex justify-center">
       <%= paginate @jobs if respond_to?(:paginate) %>
     </div>
-  </div>
+  </section>
 </div>

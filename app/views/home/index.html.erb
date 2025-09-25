@@ -1,65 +1,84 @@
-<!-- app/views/jobs/index.html.erb -->
-<div class="bg-gradient-to-r from-indigo-50 via-white to-indigo-50 min-h-screen">
+<div class="bg-gray-50 min-h-screen">
 
   <!-- Hero Section -->
-  <section class="bg-indigo-600 text-white py-20">
-    <div class="container mx-auto px-4 text-center">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">Find Your Dream Job</h1>
-      <p class="text-lg md:text-xl mb-6">Explore thousands of opportunities from top companies around the world.</p>
-      <div class="space-x-4">
-        <%= link_to "Browse Jobs", jobs_path, class: "bg-white text-indigo-600 font-semibold px-6 py-3 rounded shadow hover:bg-gray-100 transition" %>
-        <%= link_to "Post a Job", new_user_registration_path, class: "border border-white px-6 py-3 rounded hover:bg-white hover:text-indigo-600 transition" %>
+  <section class="relative bg-indigo-900 text-white">
+    <div class="max-w-6xl mx-auto px-6 py-24 text-center">
+      <h1 class="text-5xl sm:text-6xl font-extrabold leading-tight">
+        Discover Your Dream Job Today
+      </h1>
+      <p class="mt-6 text-lg sm:text-xl text-indigo-200">
+        Join thousands of professionals finding the perfect job opportunities from top companies.
+      </p>
+      
+      <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+        <%= link_to "Search Jobs", jobs_path,
+            class: "bg-white text-indigo-900 font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-100 transition" %>
+        <%= link_to "Sign Up", new_user_registration_path,
+            class: "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition" %>
       </div>
     </div>
   </section>
 
   <!-- Featured Jobs Section -->
-  <section class="container mx-auto px-4 py-16">
-    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Featured Jobs</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% Job.published.limit(6).each do |job| %>
-        <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition">
-          <h3 class="text-xl font-semibold text-indigo-600 mb-2"><%= job.title %></h3>
-          <p class="text-gray-700 mb-2"><strong>Company:</strong> <%= job.company.name %></p>
-          <p class="text-gray-700 mb-2"><strong>Location:</strong> <%= job.location %> <%= "(Remote)" if job.is_remote %></p>
-          <p class="text-gray-700 mb-4"><strong>Employment Type:</strong> <%= job.employment_type.humanize %></p>
-          <div class="flex justify-between items-center">
-            <%= link_to "View Details", job_path(job), class: "text-indigo-600 font-medium hover:underline" %>
-            <span class="text-gray-500 text-sm"><%= job.views_count %> views</span>
+  <section class="max-w-7xl mx-auto px-6 py-16">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Latest Jobs</h2>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <% @latest_jobs.each do |job| %>
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition">
+          <div class="p-6 flex flex-col gap-4">
+            <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
+              <%= link_to job.title, job_path(job) %>
+            </h3>
+            <p class="text-sm text-gray-600">
+              <%= job.company.name %> • <%= job.location %>
+              <% if job.is_remote %>
+                • <span class="text-green-600 font-medium">Remote</span>
+              <% end %>
+            </p>
+            <div class="flex flex-wrap gap-2 mt-2">
+              <% job.skills.limit(3).each do |skill| %>
+                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                  <%= skill.name %>
+                </span>
+              <% end %>
+            </div>
+            <%= link_to "View Job", job_path(job),
+                class: "mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow" %>
           </div>
         </div>
       <% end %>
     </div>
+
+    <% if @latest_jobs.empty? %>
+      <p class="text-center text-gray-600 mt-8">No jobs available at the moment. Check back soon!</p>
+    <% end %>
   </section>
 
   <!-- Companies Section -->
   <section class="bg-gray-100 py-16">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold text-gray-800 mb-8">Top Companies</h2>
-      <div class="flex flex-wrap justify-center gap-6">
-        <% Company.approved.limit(8).each do |company| %>
-          <div class="bg-white shadow-md rounded-lg p-4 w-40 flex flex-col items-center">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Top Companies Hiring</h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
+        <% @featured_companies.each do |company| %>
+          <div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-center h-24 w-24">
             <% if company.logo.attached? %>
-              <%= image_tag company.logo.variant(resize_to_limit: [80, 80]), class: "rounded-full mb-3" %>
+              <%= image_tag company.logo.variant(resize_to_limit: [80, 80]), class: "object-contain h-full w-full" %>
             <% else %>
-              <div class="w-20 h-20 bg-indigo-100 flex items-center justify-center rounded-full mb-3">
-                <span class="text-indigo-600 font-bold text-xl"><%= company.name[0] %></span>
-              </div>
+              <span class="text-gray-600 font-bold"><%= company.name.first.upcase %></span>
             <% end %>
-            <p class="text-gray-700 font-semibold text-center"><%= company.name %></p>
           </div>
         <% end %>
       </div>
     </div>
   </section>
 
-  <!-- Call-to-action Section -->
-  <section class="py-20 bg-indigo-600 text-white">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Join Our Community</h2>
-      <p class="mb-6 text-lg md:text-xl">Sign up today to apply for jobs or post your open positions.</p>
-      <%= link_to "Get Started", new_user_registration_path, class: "bg-white text-indigo-600 font-semibold px-8 py-3 rounded shadow hover:bg-gray-100 transition" %>
-    </div>
+  <!-- Call to Action Section -->
+  <section class="max-w-6xl mx-auto px-6 py-16 text-center">
+    <h2 class="text-3xl font-bold text-gray-900">Ready to Start Your Career?</h2>
+    <p class="mt-4 text-gray-700">Sign up today and start applying to your dream jobs.</p>
+    <%= link_to "Create Account", new_user_registration_path,
+        class: "mt-6 inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition" %>
   </section>
-
 </div>
