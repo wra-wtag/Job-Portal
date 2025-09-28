@@ -148,11 +148,11 @@
               <div class="flex items-center space-x-2">
                 <% if user_signed_in? && current_user.job_seeker? %>
                   <% if current_user.bookmarks.exists?(job: job) %>
-                    <%= link_to unbookmark_job_path(job), method: :delete, class: "p-2 text-red-600 hover:text-red-700" do %>
+                    <%= button_to unbookmark_job_path(job), method: :delete, class: "p-2 text-red-600 hover:text-red-700" do %>
                       ❤️
                     <% end %>
                   <% else %>
-                    <%= link_to bookmark_job_path(job), method: :post, class: "p-2 text-gray-400 hover:text-red-600" do %>
+                    <%= button_to bookmark_job_path(job), method: :post, class: "p-2 text-gray-400 hover:text-red-600" do %>
                       ♡
                     <% end %>
                   <% end %>
