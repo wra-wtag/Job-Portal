@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
     before_action :set_user, only: [:show, :edit, :update]
+    before_action :authorize_job_seeker!, only: [:edit, :update, :setup]
 
     def show
         authorize @user
@@ -33,5 +34,12 @@ class UsersController < ApplicationController
         params.require(:user).permit(
             :first_name, :last_name, :username, :bio, :location, :resume, skills_list: [], notification_preferences: {}
         )
+    end
+
+    def authorize_job_seeker!
+        return if current_user.job_seeker?
+
+        flash[:alert] = "Access denied: Only job seekers can edit profiles."
+        redirect_to root_path
     end
 end
