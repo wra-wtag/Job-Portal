@@ -13,4 +13,5 @@ Rails.application.routes.draw do
   # root "posts#index"
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq' if Rails.env.development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener"
 end
