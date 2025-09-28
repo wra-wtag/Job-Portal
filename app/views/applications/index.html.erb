@@ -1,4 +1,46 @@
-<div>
-  <h1 class="font-bold text-4xl">Applications#index</h1>
-  <p>Find me in app/views/applications/index.html.erb</p>
+<div class="max-w-7xl mx-auto py-12 px-4">
+  <h1 class="text-3xl font-bold text-gray-900 mb-6">My Applications</h1>
+
+  <% if @applications.any? %>
+    <div class="grid gap-6">
+      <% @applications.each do |application| %>
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold text-indigo-600 hover:underline">
+              <%= link_to application.job.title, job_path(application.job) %>
+            </h2>
+            <p class="text-gray-600 text-sm mt-1">
+              <%= application.job.company.name %> • <%= application.job.location %>
+              <% if application.job.is_remote %>• <span class="text-green-600">Remote</span><% end %>
+            </p>
+            <p class="text-gray-500 text-xs mt-1">Status: <%= application.status.humanize %></p>
+            <p class="text-gray-400 text-xs mt-1">Applied on: <%= application.applied_at.strftime("%B %d, %Y") %></p>
+          </div>
+
+          <div class="flex flex-col space-y-2">
+            <%= link_to "View Details", application_path(application),
+                class: "px-3 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700" %>
+
+            <% if application.status == 'applied' %>
+              <%= button_to withdraw_application_path(application), method: :patch,
+                  class: "px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600",
+                  data: { confirm: "Are you sure you want to withdraw this application?" } do %>
+                Withdraw
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-8">
+      <%= paginate @applications %>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <p class="text-gray-600 text-lg">You haven't applied to any jobs yet.</p>
+      <%= link_to "Browse Jobs", jobs_path,
+          class: "mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl shadow-lg transition" %>
+    </div>
+  <% end %>
 </div>
