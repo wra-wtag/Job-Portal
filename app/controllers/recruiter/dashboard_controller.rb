@@ -26,7 +26,6 @@ class Recruiter::DashboardController < Recruiter::ApplicationController
     @job_views_data = @company.jobs.published
                               .group(:title)
                               .sum(:views_count)
-                              .transform_keys { |k| truncate(k, lenght: 20) }
 
     @applications_by_status = Application.joins(:job)
                                          .where(jobs: { company: @company })

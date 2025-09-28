@@ -5,7 +5,8 @@ class Recruiter::JobsController < Recruiter::ApplicationController
     @jobs = current_company.jobs
                            .includes(:applications)
                            .order(created_at: :desc)
-                           .page(params[:page].per(10))
+                           .page(params[:page])
+                           .per(10)
     
     @jobs = @jobs.where(status: params[:status]) if params[:status].present?
 
@@ -21,7 +22,8 @@ class Recruiter::JobsController < Recruiter::ApplicationController
     @applications = @job.applications
                         .includes(:user)
                         .order(applied_at: :desc)
-                        .page(params[:page]).per(10)
+                        .page(params[:page])
+                        .per(10)
 
     @applications = @applications.where(status: params[:app_status]) if params[:app_status].present?
 

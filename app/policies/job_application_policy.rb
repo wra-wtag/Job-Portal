@@ -5,7 +5,7 @@ class JobApplicationPolicy < ApplicationPolicy
 
     def show?
         user.present? && (
-            user.admin? || record.user == user || (user.recruiter? && record.company.recruiters.include?(user))
+            user.admin? || record.user == user || (user.recruiter? && record.job.company.recruiters.include?(user))
         )
     end
 
