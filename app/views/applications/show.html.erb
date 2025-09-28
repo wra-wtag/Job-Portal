@@ -1,4 +1,39 @@
-<div>
-  <h1 class="font-bold text-4xl">Applications#show</h1>
-  <p>Find me in app/views/applications/show.html.erb</p>
+<div class="max-w-4xl mx-auto py-12 px-4">
+  <h1 class="text-3xl font-bold text-gray-900 mb-6"><%= @application.job.title %></h1>
+
+  <!-- Job Info -->
+  <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-6">
+    <h2 class="text-xl font-semibold text-gray-800">Job Details</h2>
+    <p class="text-gray-600 mt-2"><strong>Company:</strong> <%= @application.job.company.name %></p>
+    <p class="text-gray-600 mt-1"><strong>Location:</strong> <%= @application.job.location %></p>
+    <% if @application.job.is_remote %>
+      <p class="text-green-600 mt-1">Remote</p>
+    <% end %>
+    <% if @application.job.salary_range.present? %>
+      <p class="text-gray-600 mt-1"><strong>Salary:</strong> <%= @application.job.salary_range %></p>
+    <% end %>
+    <p class="text-gray-500 text-sm mt-2">Status: <%= @application.status.humanize %></p>
+    <p class="text-gray-400 text-sm mt-1">Applied on: <%= @application.applied_at.strftime("%B %d, %Y") %></p>
+  </div>
+
+  <!-- Job Description -->
+  <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-2">Job Description</h2>
+    <div class="prose max-w-none">
+      <%= simple_format(@application.job.description) %>
+    </div>
+  </div>
+
+  <div class="flex space-x-4">
+    <% if @application.status == 'applied' %>
+      <%= button_to withdraw_application_path(@application), method: :patch,
+          class: "px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600",
+          data: { confirm: "Are you sure you want to withdraw this application?" } do %>
+        Withdraw Application
+      <% end %>
+    <% end %>
+
+    <%= link_to "Back to Applications", applications_path,
+        class: "px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300" %>
+  </div>
 </div>

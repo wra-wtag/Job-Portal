@@ -17,67 +17,120 @@
   <body class="bg-gray-50 min-h-screen flex flex-col">
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-md">
-      <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-        <!-- Logo -->
-        <a href="<%= root_path %>" class="text-2xl font-bold text-indigo-600">Job Portal</a>
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    
+    <!-- Logo -->
+    <a href="<%= root_path %>" class="text-3xl font-extrabold text-indigo-600 hover:text-indigo-700 transition-colors">
+      JobPortal
+    </a>
 
-        <!-- Desktop Menu -->
-        <div class="hidden md:flex items-center space-x-4">
-          <% if user_signed_in? %>
-            <!-- Profile dropdown -->
-            <div class="relative group">
-              <button class="text-gray-700 font-medium flex items-center space-x-1">
-                <span><%= current_user.first_name %></span>
-                <svg class="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center space-x-6">
+      <% if user_signed_in? %>
+        <!-- Job Seeker Menu -->
+        <% if current_user.job_seeker? %>
+          <%= link_to "Jobs", jobs_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
+          <%= link_to "Bookmarks", bookmarks_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
+          <%= link_to "Applications", applications_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
 
-              <div class="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                <%= link_to "Profile", profile_path, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100" %>
-                <%= link_to "Edit Profile", profile_edit_path, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100" %>
-                
-                <% if current_user.job_seeker? %>
-                  <%= link_to "Saved Jobs", bookmarks_path, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100" %>
-                <% end %>
-                
-                <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-2 text-red-500 hover:bg-gray-100" %>
-              </div>
+          <!-- Profile Dropdown -->
+          <div class="relative group">
+            <button class="flex items-center space-x-2 text-gray-700 font-medium hover:text-indigo-600 transition-colors">
+              <span><%= current_user.first_name %></span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <%= link_to "Profile", profile_path, class: "block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-colors" %>
+              <%= link_to "Edit Profile", profile_edit_path, class: "block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-colors" %>
+              <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors" %>
             </div>
-          <% else %>
-            <%= link_to "Login", new_user_session_path, class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
-            <%= link_to "Sign Up", new_user_registration_path, class: "ml-2 text-indigo-600 hover:text-indigo-800 font-medium" %>
-          <% end %>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <div class="md:hidden">
-          <button id="mobile-menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-        <% if user_signed_in? %>
-          <%= link_to "Profile", profile_path, class: "block px-4 py-3 text-gray-700 hover:bg-gray-100" %>
-          <%= link_to "Edit Profile", profile_edit_path, class: "block px-4 py-3 text-gray-700 hover:bg-gray-100" %>
+          </div>
+        <% elsif current_user.recruiter? %>
+          <!-- Recruiter links -->
+          <%= link_to "Dashboard", recruiter_dashboard_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
+          <%= link_to "Jobs", recruiter_jobs_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
+          <%= link_to "Applications", recruiter_applications_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
           
-          <% if current_user.job_seeker? %>
-            <%= link_to "Saved Jobs", bookmarks_path, class: "block px-4 py-3 text-gray-700 hover:bg-gray-100" %>
-          <% end %>
-          
-          <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-3 text-red-500 hover:bg-gray-100" %>
+          <!-- Profile Dropdown -->
+          <div class="relative group">
+            <button class="flex items-center space-x-2 text-gray-700 font-medium hover:text-indigo-600 transition-colors">
+              <span><%= current_user.first_name %></span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <%= link_to "Companies", edit_recruiter_companies_path, class: "block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-colors" %>
+              <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors" %>
+            </div>
+          </div>
         <% else %>
-          <%= link_to "Login", new_user_session_path, class: "block px-4 py-3 text-gray-700 hover:bg-gray-100" %>
-          <%= link_to "Sign Up", new_user_registration_path, class: "block px-4 py-3 text-indigo-600 hover:text-indigo-800" %>
+          <!-- Admin links -->
+          <%= link_to "Dashboard", admin_dashboard_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
+          <%= link_to "Users", admin_users_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
+          <%= link_to "Companies", admin_companies_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
+          <%= link_to "Jobs", admin_jobs_path, class: "text-gray-700 hover:text-indigo-600 font-medium transition-colors" %>
+
+          <!-- Profile Dropdown -->
+          <div class="relative group">
+            <button class="flex items-center space-x-2 text-gray-700 font-medium hover:text-indigo-600 transition-colors">
+              <span><%= current_user.first_name %></span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors" %>
+            </div>
+          </div>
         <% end %>
-      </div>
-    </nav>
+      <% else %>
+        <%= link_to "Login", new_user_session_path, class: "text-indigo-600 hover:text-indigo-700 font-medium transition-colors" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "ml-4 text-indigo-600 hover:text-indigo-700 font-medium transition-colors" %>
+      <% end %>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <div class="md:hidden">
+      <button id="mobile-menu-button" class="text-gray-700 hover:text-indigo-600 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+    <% if user_signed_in? %>
+      <% if current_user.job_seeker? %>
+        <%= link_to "Jobs", jobs_path, class: "block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-colors" %>
+        <%= link_to "Bookmarks", bookmarks_path, class: "block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-colors" %>
+        <%= link_to "Applications", applications_path, class: "block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-colors" %>
+        <%= link_to "Profile", profile_path, class: "block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-colors" %>
+        <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors" %>
+      <% end %>
+    <% else %>
+      <%= link_to "Login", new_user_session_path, class: "block px-4 py-3 text-gray-700 hover:bg-indigo-50 rounded-lg transition-colors" %>
+      <%= link_to "Sign Up", new_user_registration_path, class: "block px-4 py-3 text-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors" %>
+    <% end %>
+  </div>
+
+  <script>
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  </script>
+</nav>
+
 
     <!-- Flash messages -->
     <div class="container mx-auto px-4 mt-4">

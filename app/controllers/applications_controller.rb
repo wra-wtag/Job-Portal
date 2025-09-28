@@ -7,7 +7,8 @@ class ApplicationsController < ApplicationController
     @applications = policy_scope(Application)
                    .includes(:job, job: :company)
                    .order(applied_at: :desc)
-                   .page(params[:page].per(10))
+                   .page(params[:page])
+                   .per(10)
     @applications = @applications.where(status: params[:status]) if params[:status].present?
 
     @stats = {
