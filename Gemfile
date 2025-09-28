@@ -61,6 +61,7 @@ group :development do
   gem "web-console"
   gem 'annotate'
   gem 'letter_opener'
+  gem 'letter_opener_web'
 end
 
 group :test do
