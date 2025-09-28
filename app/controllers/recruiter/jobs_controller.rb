@@ -79,7 +79,7 @@ class Recruiter::JobsController < Recruiter::ApplicationController
       if params[:skills].present?
         @job.job_skills.destroy_all
         
-        skill_names = params[:skills].split(',').map(&:strip)
+        skill_names = params[:skills].map(&:strip)
         skill_names.each do |skill_name|
           next if skill_name.blank?
           skill = Skill.find_or_create_by_name(skill_name)

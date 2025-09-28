@@ -118,13 +118,13 @@
                       
                       <% case job.status %>
                       <% when 'draft' %>
-                        <%= link_to "Publish", toggle_status_recruiter_job_path(job), method: :patch,
+                        <%= button_to "Publish", toggle_status_recruiter_job_path(job), method: :patch,
                             class: "text-green-600 hover:text-green-900 text-sm font-medium" %>
                       <% when 'published' %>
-                        <%= link_to "Close", toggle_status_recruiter_job_path(job), method: :patch,
+                        <%= button_to "Close", toggle_status_recruiter_job_path(job), method: :patch,
                             class: "text-red-600 hover:text-red-900 text-sm font-medium" %>
                       <% when 'closed' %>
-                        <%= link_to "Reopen", toggle_status_recruiter_job_path(job), method: :patch,
+                        <%= button_to "Reopen", toggle_status_recruiter_job_path(job), method: :patch,
                             class: "text-green-600 hover:text-green-900 text-sm font-medium" %>
                       <% end %>
                       
