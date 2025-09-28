@@ -28,6 +28,18 @@ Rails.application.routes.draw do
   resources :bookmarks, only: [:index, :destroy]
 
   namespace :recruiter do
+    get "applications/index"
+    get "applications/show"
+    get "applications/update"
+    get "jobs/index"
+    get "jobs/show"
+    get "jobs/new"
+    get "jobs/create"
+    get "jobs/edit"
+    get "jobs/update"
+    get "jobs/destroy"
+    get "jobs/toggle_status"
+    get "dashboard/index"
     get 'dashboard', to: 'dashboard#index'
     resources :companies, except: [:index] do
       resources :jobs do
