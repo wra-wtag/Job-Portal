@@ -1,0 +1,34 @@
+<div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl w-full bg-white shadow-lg rounded-2xl p-10 space-y-6">
+
+    <!-- User Name -->
+    <h1 class="text-4xl font-extrabold text-gray-900"><%= @user.full_name %></h1>
+
+    <!-- Profile Details -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <p><strong>Username:</strong> <%= @user.username %></p>
+      <p><strong>Email:</strong> <%= @user.email %></p>
+      <p class="sm:col-span-2"><strong>Location:</strong> <%= @user.location %></p>
+      <p class="sm:col-span-2 break-words"><strong>Bio:</strong> <%= @user.bio %></p>
+      <p class="sm:col-span-2"><strong>Skills:</strong> <%= @user.skills.pluck(:name).join(", ") %></p>
+
+      <!-- Resume -->
+      <% if @user.resume.attached? %>
+        <p class="sm:col-span-2">
+          <strong>Resume:</strong>
+          <%= link_to "View Resume", rails_blob_path(@user.resume, disposition: "inline"), target: "_blank", class: "text-indigo-600 hover:underline ml-1" %>
+          |
+          <%= link_to "Download Resume", rails_blob_path(@user.resume, disposition: "attachment"), class: "text-indigo-600 hover:underline ml-1" %>
+        </p>
+      <% else %>
+        <p class="sm:col-span-2 text-gray-500"><strong>Resume:</strong> Not uploaded yet.</p>
+      <% end %>
+    </div>
+
+    <!-- Edit Button -->
+    <div class="mt-6 flex justify-end">
+      <%= link_to "Edit Profile", profile_edit_path, class: "px-6 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-indigo-700" %>
+    </div>
+
+  </div>
+</div>

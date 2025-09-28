@@ -31,7 +31,7 @@ class UsersController < ApplicationController
 
     def user_params
         params.require(:user).permit(
-            :first_name, :last_name, :username, :bio, :location, :resume, notification_preferences: {}
+            :first_name, :last_name, :username, :bio, :location, :resume, skills_list: [], notification_preferences: {}
         )
     end
 end
