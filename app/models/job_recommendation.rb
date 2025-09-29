@@ -6,7 +6,7 @@ class JobRecommendation < ApplicationRecord
   scope :pending, -> { where(sent_at: nil) }
   scope :sent, -> { where.not(sent_at: nil) }
   scope :scheduled_for_today, -> { where(scheduled_for: Date.current.beginning_of_day..Date.current.end_of_day) }
-
+  
   def sent?
     sent_at.present?
   end
