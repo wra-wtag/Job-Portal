@@ -54,6 +54,13 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resources :recruiter_requests, only: [:index, :show] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+    
     get 'dashboard', to: 'dashboard#index'
     get 'analytics', to: 'analytics#index'
     
