@@ -96,10 +96,10 @@
             <div class="flex-1">
               <div class="flex items-center gap-4">
                 <% if job.company.logo.attached? %>
-                  <%= image_tag job.company.logo.variant(resize_to_limit: [60, 60]), class: "h-14 w-14 rounded-lg object-cover" %>
+                  <%= image_tag job.company.logo, class: "h-16 w-16 rounded-lg object-cover mr-4" %>
                 <% else %>
-                  <div class="h-14 w-14 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span class="text-lg font-semibold text-gray-600"><%= job.company.name.first.upcase %></span>
+                  <div class="h-16 w-16 bg-gray-200 rounded-lg flex items-center justify-center mr-4">
+                    <span class="text-lg font-medium text-gray-600"><%= job.company.name.first.upcase %></span>
                   </div>
                 <% end %>
                 <div>
