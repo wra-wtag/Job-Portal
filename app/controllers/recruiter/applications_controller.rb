@@ -38,7 +38,7 @@ class Recruiter::ApplicationsController < Recruiter::ApplicationController
     authorize @application
     
     old_status = @application.status
-    new_status = params[:status]
+    new_status = params.dig(:application, :status)
 
     if @application.update(status: new_status)
       Notification.create!(
@@ -48,7 +48,6 @@ class Recruiter::ApplicationsController < Recruiter::ApplicationController
         content: application_status_message(new_status, @application.job.title)
       )
 
-      # Send email notification
       JobApplicationMailer.application_status_update(@application).deliver_later
 
       redirect_to recruiter_application_path(@application), 
