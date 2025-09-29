@@ -39,8 +39,12 @@ class Recruiter::DashboardController < Recruiter::ApplicationController
     end
     
     @job_views_data = @company.jobs.published
-                              .group(:title)
-                              .sum(:views_count)
+                            .group(:title)
+                            .sum(:views_count)
+                            .transform_keys { |k| k.length > 20 ? "#{k[0, 17]}..." : k }
+
+    @job_views_data = {} if @job_views_data.empty?
+    @max_views = @job_views_data.values.max || 0
 
     @applications_by_status = Application.joins(:job)
                                          .where(jobs: { company: @company })
