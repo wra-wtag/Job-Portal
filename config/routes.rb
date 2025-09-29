@@ -1,9 +1,4 @@
 Rails.application.routes.draw do
-  get "recruiter_onboarding/index"
-  get "recruiter_onboarding/create_company"
-  get "recruiter_onboarding/join_company"
-  get "recruiter_onboarding/submit_request"
-  get "recruiter_onboarding/pending"
   devise_for :users, controllers: {
     registrations: "users/registrations",
     sessions: "users/sessions"
@@ -32,21 +27,19 @@ Rails.application.routes.draw do
 
   resources :bookmarks, only: [:index, :destroy]
 
+  get 'recruiter/onboarding', to: 'recruiter_onboarding#index'
+  get 'recruiter/onboarding/join_company', to: 'recruiter_onboarding#join_company', as: 'join_company_recruiter_onboarding'
+  post 'recruiter/onboarding/submit_request', to: 'recruiter_onboarding#submit_request'
+  get 'recruiter/pending', to: 'recruiter_onboarding#pending', as: 'recruiter_pending'
+
   namespace :recruiter do
-    get "team/index"
-    get "team/approve_request"
-    get "team/reject_request"
-    get "team/remove_recruiter"
-    get 'dashboard', to: 'dashboard#index'
-    
-    resources :jobs do
+    resources :team, only: [:index] do
       member do
-        patch :toggle_status
+        patch :approve_request
+        patch :reject_request
+        delete :remove_recruiter
       end
     end
-    
-    resources :applications, only: [:index, :show, :update]
-    resources :companies, only: [:edit, :update]
   end
 
   namespace :admin do
