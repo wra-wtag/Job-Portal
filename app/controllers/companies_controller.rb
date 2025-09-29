@@ -1,6 +1,7 @@
 class CompaniesController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_recruiter!, except: [:pending_approval]
+  skip_before_action :authenticate_user!, only: [:pending_approval]
 
   def new
     @company = Company.new
@@ -16,6 +17,7 @@ class CompaniesController < ApplicationController
         user: current_user,
         company: @company,
         role: 'manager',
+        status: 'pending',
         is_primary: true,
         title: 'Founder'
       )
@@ -43,8 +45,16 @@ class CompaniesController < ApplicationController
   end
 
   def pending_approval
-    @companies = current_user.companies.pending
-    redirect_to recruiter_dashboard_path if @companies.empty? && current_user.can_post_jobs?
+    if user_signed_in? && current_user.recruiter?
+      @companies = current_user.companies.pending
+      @pending_memberships = current_user.recruiter_memberships.pending
+      
+      if current_user.can_post_jobs?
+        redirect_to recruiter_dashboard_path
+      end
+    else
+      redirect_to root_path, alert: 'Access denied.'
+    end
   end
 
   private
