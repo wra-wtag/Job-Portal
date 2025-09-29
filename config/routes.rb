@@ -43,6 +43,10 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get "recruiter_requests/index"
+    get "recruiter_requests/show"
+    get "recruiter_requests/approve"
+    get "recruiter_requests/reject"
     get 'dashboard', to: 'dashboard#index'
     resources :users
     resources :companies do
