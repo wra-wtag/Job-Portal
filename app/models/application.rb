@@ -12,9 +12,9 @@ class Application < ApplicationRecord
   scope :recent, -> { order(applied_at: :desc) }
   scope :by_status, ->(status) { where(status: status) }
   scope :pending_review, -> { where(status: ['applied', 'viewed']) }
-
-  before_create :set_applied_at
   
+  before_create :set_applied_at
+
   def applied?
     status == 'applied'
   end

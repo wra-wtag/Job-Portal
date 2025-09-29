@@ -21,7 +21,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if resource.job_seeker?
       profile_setup_path
     elsif resource.recruiter?
-      new_company_path
+      recruiter_onboarding_path
     else
       root_path
     end

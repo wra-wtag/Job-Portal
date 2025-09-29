@@ -25,7 +25,7 @@ class User < ApplicationRecord
   has_many :recruiter_memberships, dependent: :destroy
   has_many :companies, through: :recruiter_memberships
   has_many :posted_jobs, class_name: 'Job', foreign_key: 'posted_by_user_id', dependent: :destroy
-
+  
   has_many :approved_companies, class_name: 'Company', foreign_key: 'approved_by_id'
 
   has_one_attached :resume
@@ -33,7 +33,6 @@ class User < ApplicationRecord
   scope :job_seekers, -> { where(role: 'job_seeker') }
   scope :recruiters, -> { where(role: 'recruiter') }
   scope :admins, -> { where(role: 'admin') }
-  
   def full_name
     "#{first_name} #{last_name}"
   end
@@ -55,7 +54,23 @@ class User < ApplicationRecord
   end
 
   def can_post_jobs?
-    recruiter? && companies.approved.any?
+    recruiter? && recruiter_memberships.approved.joins(:company).where(companies: { status: 'approved' }).any?
+  end
+
+  def primary_company
+    recruiter_memberships.approved.where(is_primary: true).first&.company
+  end
+
+  def managed_companies
+    recruiter_memberships.approved.managers.includes(:company).map(&:company)
+  end
+
+  def standard_companies
+    recruiter_memberships.approved.standard.includes(:company).map(&:company)
+  end
+
+  def can_manage_company?(company)
+    recruiter_memberships.approved.managers.exists?(company: company)
   end
 
   private
