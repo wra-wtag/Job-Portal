@@ -49,7 +49,7 @@ class RecruiterOnboardingController < ApplicationController
           user: manager_membership.user,
           kind: 'recruiter_request',
           title: 'New Recruiter Request',
-          content: "#{current_user.full_name} wants to join #{company.name} as a recruiter"
+          content: "#{current_user.full_name} wants to join #{@company.name} as a recruiter"
         )
       end
 
