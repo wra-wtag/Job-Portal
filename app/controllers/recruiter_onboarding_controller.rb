@@ -1,8 +1,16 @@
 class RecruiterOnboardingController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_recruiter!
+  before_action :check_if_already_approved!, only: [:index]
+  layout 'application'
 
   def index
+    @has_pending = current_user.recruiter_memberships.pending.any? || current_user.companies.pending.any?
+
+    if @has_pending
+      redirect_to recruiter_pending_path
+      return
+    end
     @companies = Company.approved.order(:name)
   end
 
@@ -52,15 +60,24 @@ class RecruiterOnboardingController < ApplicationController
   end
 
   def pending
-    @pending_requests = current_user.recruiter_memberships.pending.includes(:company)
+    @pending_companies = current_user.companies.pending.includes(:approved_by)
+    @pending_memberships = current_user.recruiter_memberships.pending.includes(:company)
     @approved_memberships = current_user.recruiter_memberships.approved.includes(:company)
-
-    redirect_to recruiter_dashboard_path if @approved_memberships.any? && @pending_requests.empty?
+    
+    if @approved_memberships.any? { |m| m.company.approved? }
+      redirect_to recruiter_dashboard_path
+    end
   end
 
   private
 
   def ensure_recruiter!
     redirect_to root_path unless current_user.recruiter?
+  end
+
+  def check_if_already_approved!
+    if current_user.can_post_jobs?
+      redirect_to recruiter_dashboard_path
+    end
   end
 end

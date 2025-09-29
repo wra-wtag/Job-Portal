@@ -1,7 +1,7 @@
 class Recruiter::ApplicationController < ApplicationController
     before_action :authenticate_user!
     before_action :ensure_recruiter!
-    before_action :ensure_approved_membership!
+    before_action :check_recruiter_status!
     layout 'recruiter'
 
     private
@@ -10,12 +10,20 @@ class Recruiter::ApplicationController < ApplicationController
         redirect_to root_path, alert: 'Access denied.' unless current_user.recruiter?
     end
 
-    def ensure_approved_membership!
-        unless current_user.recruiter_memberships.approved.joins(:company).where(companies: { status: 'approved' }).any?
-            if current_user.recruiter_memberships.pending.any?
-                redirect_to recruiter_pending_path, alert: 'Your recruiter request is still pending approval.'
+    def check_recruiter_status!
+        approved_memberships = current_user.recruiter_memberships
+                                           .approved
+                                           .joins(:company)
+                                           .where(companies: { status: 'approved' })
+
+        if approved_memberships.empty?
+            has_pending_requests = current_user.recruiter_memberships.pending.any?
+            has_pending_companies = current_user.companies.pending.any?
+            
+            if has_pending_requests || has_pending_companies
+                redirect_to recruiter_pending_path, alert: 'Your request is still pending approval.'
             else
-                redirect_to recruiter_onboarding_path, alert: 'You need to be part of an approved company to access recruiter features.'
+                redirect_to recruiter_onboarding_path, alert: 'Please create a company or request to join an existing one.'
             end
         end
     end

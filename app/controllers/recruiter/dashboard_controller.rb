@@ -21,6 +21,7 @@ class Recruiter::DashboardController < Recruiter::ApplicationController
         managers: @company.recruiter_memberships.approved.managers.count,
         standard_recruiters: @company.recruiter_memberships.approved.standard.count
       }
+    end
 
     @recent_jobs = @company.jobs
                            .includes(:applications)
