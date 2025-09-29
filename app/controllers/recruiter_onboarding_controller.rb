@@ -1,0 +1,66 @@
+class RecruiterOnboardingController < ApplicationController
+  before_action :authenticate_user!
+  before_action :ensure_recruiter!
+
+  def index
+    @companies = Company.approved.order(:name)
+  end
+
+  def create_company
+    redirect_to new_company_path
+  end
+
+  def join_company
+    @company = Company.approved.find(params[:company_id])
+    @membership_request = current_user.recruiter_memberships.build(company: @company)
+  end
+
+  def submit_request
+    @company = Company.approved.find(params[:company_id])
+    existing_request = current_user.recruiter_memberships.find_by(company: @company)
+
+    if existing_request
+      redirect_to recruiter_onboarding_path, alert: "You already have a request for this company."
+      return
+    end
+
+    @membership_request = current_user.recruiter_memberships.build(
+      company: @company,
+      role: 'standard',
+      status: 'pending',
+      title: params[:title],
+      contact_info: {
+        message: params[:message],
+        experience: params[:experience]
+      }
+    )
+
+    if @membership_request.save
+      @company.recruiter_memberships.approved.managers.each do |manager_membership|
+        Notification.create!(
+          user: manager_membership.user,
+          kind: 'recruiter_request',
+          title: 'New Recruiter Request',
+          content: "#{current_user.full_name} wants to join #{company.name} as a recruiter"
+        )
+      end
+
+      redirect_to recruiter_pending_path, notice: 'Your request has been sent to the company managers!'
+    else
+      render :join_company
+    end
+  end
+
+  def pending
+    @pending_requests = current_user.recruiter_memberships.pending.includes(:company)
+    @approved_memberships = current_user.recruiter_memberships.approved.includes(:company)
+
+    redirect_to recruiter_dashboard_path if @approved_memberships.any? && @pending_requests.empty?
+  end
+
+  private
+
+  def ensure_recruiter!
+    redirect_to root_path unless current_user.recruiter?
+  end
+end

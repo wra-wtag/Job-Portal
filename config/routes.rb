@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get "recruiter_onboarding/index"
+  get "recruiter_onboarding/create_company"
+  get "recruiter_onboarding/join_company"
+  get "recruiter_onboarding/submit_request"
+  get "recruiter_onboarding/pending"
   devise_for :users, controllers: {
     registrations: "users/registrations",
     sessions: "users/sessions"
@@ -28,6 +33,10 @@ Rails.application.routes.draw do
   resources :bookmarks, only: [:index, :destroy]
 
   namespace :recruiter do
+    get "team/index"
+    get "team/approve_request"
+    get "team/reject_request"
+    get "team/remove_recruiter"
     get 'dashboard', to: 'dashboard#index'
     
     resources :jobs do
