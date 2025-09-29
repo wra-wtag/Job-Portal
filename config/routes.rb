@@ -37,10 +37,13 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    get "recruiter_requests/index"
-    get "recruiter_requests/show"
-    get "recruiter_requests/approve"
-    get "recruiter_requests/reject"
+    resources :recruiter_requests, only: [:index, :show] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+    
     get 'dashboard', to: 'dashboard#index'
     resources :users
     resources :companies do
