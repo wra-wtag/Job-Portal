@@ -1,6 +1,8 @@
 class HomeController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index]
   def index
+    @latest_jobs = Job.published.order(created_at: :desc).limit(6)
+    @featured_companies = Company.approved.limit(8)
     if user_signed_in?
       redirect_to redirect_path_for_user
     else
@@ -22,6 +24,8 @@ class HomeController < ApplicationController
       else
         company_pending_approval_path
       end
+    when "job_seeker"
+      jobs_path
     else
       root_path
     end

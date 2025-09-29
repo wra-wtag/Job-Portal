@@ -15,6 +15,10 @@ class UserPolicy < ApplicationPolicy
         user.present? && user.admin? && user != record
     end
 
+    def setup?
+        user.present? && user == record
+    end
+
     class Scope < Scope
         def resolve
             if user.admin?
