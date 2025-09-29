@@ -33,6 +33,17 @@ Rails.application.routes.draw do
   get 'recruiter/pending', to: 'recruiter_onboarding#pending', as: 'recruiter_pending'
 
   namespace :recruiter do
+    get 'dashboard', to: 'dashboard#index'
+    
+    resources :jobs do
+      member do
+        patch :toggle_status
+      end
+    end
+    
+    resources :applications, only: [:index, :show, :update]
+    resources :companies, only: [:show, :edit, :update]
+    
     resources :team, only: [:index] do
       member do
         patch :approve_request
@@ -43,11 +54,9 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    get "recruiter_requests/index"
-    get "recruiter_requests/show"
-    get "recruiter_requests/approve"
-    get "recruiter_requests/reject"
     get 'dashboard', to: 'dashboard#index'
+    get 'analytics', to: 'analytics#index'
+    
     resources :users
     resources :companies do
       member do
@@ -56,6 +65,13 @@ Rails.application.routes.draw do
       end
     end
     resources :jobs
+    
+    resources :recruiter_requests, only: [:index, :show] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
   end
 
   resources :companies, only: [:new, :create, :edit, :update] do
