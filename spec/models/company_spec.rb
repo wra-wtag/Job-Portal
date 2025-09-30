@@ -52,7 +52,7 @@ RSpec.describe Company, type: :model do
   describe "instance methods" do
     let(:company) { create(:company) }
     let(:admin_user) { create(:user, :admin) }
-    
+
     describe "#approved?" do
       it "returns true if the company is approved" do
         company.update!(status: 'approved')
@@ -88,7 +88,7 @@ RSpec.describe Company, type: :model do
         expect(company.rejected?).to be(false)
       end
     end
-    
+
     describe "#approve!" do
       it "updates the company status to approved and sets approved_by and approved_at" do
         expect { company.approve!(admin_user) }.to change { company.status }.to('approved')
