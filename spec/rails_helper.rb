@@ -73,7 +73,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-  #database cleaner config
+  # database cleaner config
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
