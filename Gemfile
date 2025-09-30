@@ -85,3 +85,4 @@ gem "dotenv-rails"
 gem "email_validator"
 gem "phony_rails"
 gem "mini_magick"
+gem "rubocop", "~> 1.80", require: false
