@@ -1,7 +1,7 @@
 class CompaniesController < ApplicationController
   before_action :authenticate_user!
-  before_action :ensure_recruiter!, except: [:pending_approval]
-  skip_before_action :authenticate_user!, only: [:pending_approval]
+  before_action :ensure_recruiter!, except: [ :pending_approval ]
+  skip_before_action :authenticate_user!, only: [ :pending_approval ]
 
   def new
     @company = Company.new
@@ -11,18 +11,18 @@ class CompaniesController < ApplicationController
   def create
     @company = Company.new(company_params)
     authorize @company
-    
+
     if @company.save
       RecruiterMembership.create!(
         user: current_user,
         company: @company,
-        role: 'manager',
-        status: 'pending',
+        role: "manager",
+        status: "pending",
         is_primary: true,
-        title: 'Founder'
+        title: "Founder"
       )
 
-      redirect_to company_pending_approval_path, notice: 'Company application submitted successfully! Please wait for admin approval.'
+      redirect_to company_pending_approval_path, notice: "Company application submitted successfully! Please wait for admin approval."
     else
       render :new
     end
@@ -36,9 +36,9 @@ class CompaniesController < ApplicationController
   def update
     @company = current_user.companies.find(params[:id])
     authorize @company
-    
+
     if @company.update(company_params)
-      redirect_to recruiter_dashboard_path, notice: 'Company updated successfully!'
+      redirect_to recruiter_dashboard_path, notice: "Company updated successfully!"
     else
       render :edit
     end
@@ -48,12 +48,12 @@ class CompaniesController < ApplicationController
     if user_signed_in? && current_user.recruiter?
       @companies = current_user.companies.pending
       @pending_memberships = current_user.recruiter_memberships.pending
-      
+
       if current_user.can_post_jobs?
         redirect_to recruiter_dashboard_path
       end
     else
-      redirect_to root_path, alert: 'Access denied.'
+      redirect_to root_path, alert: "Access denied."
     end
   end
 

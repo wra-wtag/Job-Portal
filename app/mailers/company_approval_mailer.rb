@@ -1,10 +1,10 @@
 class CompanyApprovalMailer < ApplicationMailer
-    default from: 'noreply@jobportal.com'
-    
+    default from: "noreply@jobportal.com"
+
     def approved(company)
         @company = company
         @recruiters = company.recruiters
-        
+
         @recruiters.each do |recruiter|
         mail(
             to: recruiter.email,
@@ -16,7 +16,7 @@ class CompanyApprovalMailer < ApplicationMailer
     def rejected(company)
         @company = company
         @recruiters = company.recruiters
-        
+
         @recruiters.each do |recruiter|
         mail(
             to: recruiter.email,
