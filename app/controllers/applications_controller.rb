@@ -1,7 +1,7 @@
 class ApplicationsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_job_seeker!
-  before_action :set_application, only: [:show, :withdraw]
+  before_action :set_application, only: [ :show, :withdraw ]
 
   def index
     @applications = policy_scope(Application)
@@ -13,11 +13,11 @@ class ApplicationsController < ApplicationController
 
     @stats = {
       total: current_user.applications.count,
-      applied: current_user.applications.where(status: 'applied').count,
-      viewed: current_user.applications.where(status: 'viewed').count,
-      shortlisted: current_user.applications.where(status: 'shortlisted').count,
-      rejected: current_user.applications.where(status: 'rejected').count,
-      hired: current_user.applications.where(status: 'hired').count
+      applied: current_user.applications.where(status: "applied").count,
+      viewed: current_user.applications.where(status: "viewed").count,
+      shortlisted: current_user.applications.where(status: "shortlisted").count,
+      rejected: current_user.applications.where(status: "rejected").count,
+      hired: current_user.applications.where(status: "hired").count
     }
   end
 
@@ -26,7 +26,7 @@ class ApplicationsController < ApplicationController
 
     current_user.notifications
                 .where(kind: "application_update")
-                .where('content LIKE ?', "%#{@application.job.title}")
+                .where("content LIKE ?", "%#{@application.job.title}")
                 .unread
                 .update_all(read_at: Time.current)
   end
@@ -58,6 +58,6 @@ class ApplicationsController < ApplicationController
   end
 
   def ensure_job_seeker!
-    redirect_to root_path, alert: 'Access denied.' unless current_user.job_seeker?
+    redirect_to root_path, alert: "Access denied." unless current_user.job_seeker?
   end
 end

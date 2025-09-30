@@ -3,10 +3,10 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable
-  
+
   attr_accessor :skills_list
   after_save :assign_skills_from_list, if: -> { skills_list.present? }
-  
+
   ROLES = %w[job_seeker recruiter admin].freeze
 
   validates :first_name, :last_name, presence: true
@@ -82,7 +82,7 @@ class User < ApplicationRecord
     skill_names = Array(skills_list).map(&:strip).reject(&:blank?)
 
     new_skills = skill_names.map do |name|
-      Skill.where('LOWER(name) = ?', name.downcase).first_or_create(name: name)
+      Skill.where("LOWER(name) = ?", name.downcase).first_or_create(name: name)
     end
 
     self.skills = new_skills

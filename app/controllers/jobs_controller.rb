@@ -1,7 +1,7 @@
 class JobsController < ApplicationController
-  before_action :set_job, only: [:show, :apply, :submit_application, :bookmark, :unbookmark]
-  before_action :ensure_job_seeker!, only: [:apply, :submit_application, :bookmark, :unbookmark]
-  skip_before_action :authenticate_user!, only: [:index, :show]
+  before_action :set_job, only: [ :show, :apply, :submit_application, :bookmark, :unbookmark ]
+  before_action :ensure_job_seeker!, only: [ :apply, :submit_application, :bookmark, :unbookmark ]
+  skip_before_action :authenticate_user!, only: [ :index, :show ]
 
   def index
     @jobs = policy_scope(Job).published.active.includes(:company, :skills)
@@ -11,11 +11,11 @@ class JobsController < ApplicationController
     @jobs = apply_sorting(@jobs)
     @jobs = @jobs.page(params[:page]).per(12)
     @employment_types = [
-      ['Full Time', 'full_time'],
-      ['Part Time', 'part_time'],
-      ['Contract', 'contract'],
-      ['Internship', 'internship'],
-      ['Temporary', 'temporary']
+      [ "Full Time", "full_time" ],
+      [ "Part Time", "part_time" ],
+      [ "Contract", "contract" ],
+      [ "Internship", "internship" ],
+      [ "Temporary", "temporary" ]
     ]
     @industries = Company.distinct.pluck(:industry).compact.sort
     @locations = Job.distinct.pluck(:location).compact.sort
@@ -39,8 +39,8 @@ class JobsController < ApplicationController
       @similar_jobs = Job.published.active.joins(:job_skills)
                                           .where(job_skills: { skill_id: skill_ids })
                                           .where.not(id: @job.id)
-                                          .group('jobs.id')
-                                          .order('COUNT(job_skills.id) DESC')
+                                          .group("jobs.id")
+                                          .order("COUNT(job_skills.id) DESC")
                                           .limit(4)
     else
       @similar_jobs = Job.published.active
@@ -92,9 +92,9 @@ class JobsController < ApplicationController
 
     unless current_user.bookmarks.exists?(job: @job)
       current_user.bookmarks.create!(job: @job)
-      flash[:notice] = 'Job bookmarked successfully!'
+      flash[:notice] = "Job bookmarked successfully!"
     else
-      flash[:alert] = 'Job is already bookmarked.'
+      flash[:alert] = "Job is already bookmarked."
     end
 
     redirect_back(fallback_location: job_path(@job))
@@ -106,7 +106,7 @@ class JobsController < ApplicationController
     bookmark = current_user.bookmarks.find_by(job: @job)
     if bookmark
       bookmark.destroy
-      flash[:notice] = 'Job removed from bookmarks.'
+      flash[:notice] = "Job removed from bookmarks."
     end
 
     redirect_back(fallback_location: job_path(@job))
@@ -120,7 +120,7 @@ class JobsController < ApplicationController
   end
 
   def ensure_job_seeker!
-    redirect_to root_path, alert: 'Access denied.' unless current_user&.job_seeker?
+    redirect_to root_path, alert: "Access denied." unless current_user&.job_seeker?
   end
 
   def application_params
@@ -129,41 +129,41 @@ class JobsController < ApplicationController
 
   def apply_filters(jobs)
     jobs = jobs.where(employment_type: params[:employment_type]) if params[:employment_type].present?
-    jobs = jobs.where(is_remote: true) if params[:remote] == 'true'
+    jobs = jobs.where(is_remote: true) if params[:remote] == "true"
     jobs = jobs.joins(:company).where(companies: { industry: params[:industry] }) if params[:industry].present?
-    jobs = jobs.where('jobs.location ILIKE ?', "%#{params[:location]}%") if params[:location].present?
-    
+    jobs = jobs.where("jobs.location ILIKE ?", "%#{params[:location]}%") if params[:location].present?
+
     if params[:salary_min].present?
-      jobs = jobs.where('salary_min >= ?', params[:salary_min])
+      jobs = jobs.where("salary_min >= ?", params[:salary_min])
     end
-    
+
     if params[:salary_max].present?
-      jobs = jobs.where('salary_max <= ?', params[:salary_max])
+      jobs = jobs.where("salary_max <= ?", params[:salary_max])
     end
-    
+
     jobs
   end
 
   def apply_search(jobs)
     search_term = params[:search].strip
     jobs.where(
-      'jobs.title ILIKE ? OR jobs.description ILIKE ? OR companies.name ILIKE ?',
+      "jobs.title ILIKE ? OR jobs.description ILIKE ? OR companies.name ILIKE ?",
       "%#{search_term}%", "%#{search_term}%", "%#{search_term}%"
     ).joins(:company)
   end
 
   def apply_sorting(jobs)
     case params[:sort]
-    when 'newest'
+    when "newest"
       jobs.order(published_at: :desc)
-    when 'oldest'
+    when "oldest"
       jobs.order(published_at: :asc)
-    when 'salary_high'
+    when "salary_high"
       jobs.order(salary_max: :desc, salary_min: :desc)
-    when 'salary_low'
+    when "salary_low"
       jobs.order(salary_min: :asc, salary_max: :asc)
-    when 'company'
-      jobs.joins(:company).order('companies.name ASC')
+    when "company"
+      jobs.joins(:company).order("companies.name ASC")
     else
       jobs.order(published_at: :desc)
     end
