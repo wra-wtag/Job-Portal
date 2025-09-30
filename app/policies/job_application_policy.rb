@@ -12,7 +12,7 @@ class JobApplicationPolicy < ApplicationPolicy
     def create?
         user.present? && user.job_seeker?
     end
-    
+
     def update?
         user.present? && (
             user.admin? || (user.recruiter? && record.company.recruiters.include?(user))
