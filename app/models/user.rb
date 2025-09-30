@@ -3,10 +3,10 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable
-  
+
   attr_accessor :skills_list
   after_save :assign_skills_from_list, if: -> { skills_list.present? }
-  
+
   ROLES = %w[job_seeker recruiter admin].freeze
 
   validates :first_name, :last_name, presence: true
@@ -24,29 +24,30 @@ class User < ApplicationRecord
 
   has_many :recruiter_memberships, dependent: :destroy
   has_many :companies, through: :recruiter_memberships
-  has_many :posted_jobs, class_name: 'Job', foreign_key: 'posted_by_user_id', dependent: :destroy
-  
-  has_many :approved_companies, class_name: 'Company', foreign_key: 'approved_by_id'
+  has_many :posted_jobs, class_name: "Job", foreign_key: "posted_by_user_id", dependent: :destroy
+
+  has_many :approved_companies, class_name: "Company", foreign_key: "approved_by_id"
 
   has_one_attached :resume
 
-  scope :job_seekers, -> { where(role: 'job_seeker') }
-  scope :recruiters, -> { where(role: 'recruiter') }
-  scope :admins, -> { where(role: 'admin') }
+  scope :job_seekers, -> { where(role: "job_seeker") }
+  scope :recruiters, -> { where(role: "recruiter") }
+  scope :admins, -> { where(role: "admin") }
+
   def full_name
     "#{first_name} #{last_name}"
   end
 
   def job_seeker?
-    role == 'job_seeker'
+    role == "job_seeker"
   end
 
   def recruiter?
-    role == 'recruiter'
+    role == "recruiter"
   end
 
   def admin?
-    role == 'admin'
+    role == "admin"
   end
 
   def primary_company
@@ -54,7 +55,7 @@ class User < ApplicationRecord
   end
 
   def can_post_jobs?
-    recruiter? && recruiter_memberships.approved.joins(:company).where(companies: { status: 'approved' }).any?
+    recruiter? && recruiter_memberships.approved.joins(:company).where(companies: { status: "approved" }).any?
   end
 
   def primary_company
@@ -81,7 +82,7 @@ class User < ApplicationRecord
     skill_names = Array(skills_list).map(&:strip).reject(&:blank?)
 
     new_skills = skill_names.map do |name|
-      Skill.where('LOWER(name) = ?', name.downcase).first_or_create(name: name)
+      Skill.where("LOWER(name) = ?", name.downcase).first_or_create(name: name)
     end
 
     self.skills = new_skills

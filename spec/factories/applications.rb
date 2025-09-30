@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :application do
     association :job
     association :user
-    
+
     cover_letter { Faker::Lorem.paragraph(sentence_count: 3) }
     status { Application::STATUSES.sample }
     applied_at { Time.current }

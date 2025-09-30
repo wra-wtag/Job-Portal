@@ -11,32 +11,32 @@ class Application < ApplicationRecord
 
   scope :recent, -> { order(applied_at: :desc) }
   scope :by_status, ->(status) { where(status: status) }
-  scope :pending_review, -> { where(status: ['applied', 'viewed']) }
-  
+  scope :pending_review, -> { where(status: [ "applied", "viewed" ]) }
+
   before_create :set_applied_at
 
   def applied?
-    status == 'applied'
+    status == "applied"
   end
 
   def viewed?
-    status == 'viewed'
+    status == "viewed"
   end
 
   def shortlisted?
-    status == 'shortlisted'
+    status == "shortlisted"
   end
 
   def rejected?
-    status == 'rejected'
+    status == "rejected"
   end
-  
+
   def hired?
-    status == 'hired'
+    status == "hired"
   end
 
   def withdrawn?
-    status == 'withdrawn'
+    status == "withdrawn"
   end
 
   def status_humanized
@@ -48,7 +48,7 @@ class Application < ApplicationRecord
   end
 
   def withdraw!
-    update!(status: 'withdrawn')
+    update!(status: "withdrawn")
   end
 
   def set_applied_at

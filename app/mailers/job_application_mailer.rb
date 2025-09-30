@@ -1,5 +1,5 @@
 class JobApplicationMailer < ApplicationMailer
-  default from: 'noreply@jobportal.com'
+  default from: "noreply@jobportal.com"
 
   def new_application(application)
     @application = application

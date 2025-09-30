@@ -17,7 +17,7 @@ RSpec.describe Bookmark, type: :model do
     let!(:recent_bookmark) { create(:bookmark, created_at: 1.day.ago) }
 
     it ".recent returns bookmarks ordered by created_at descending" do
-      expect(Bookmark.recent).to eq([recent_bookmark, older_bookmark])
+      expect(Bookmark.recent).to eq([ recent_bookmark, older_bookmark ])
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_24_090332) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -161,9 +161,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
     t.json "contact_info", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "status", default: "pending"
     t.index ["company_id"], name: "index_recruiter_memberships_on_company_id"
-    t.index ["status"], name: "index_recruiter_memberships_on_status"
     t.index ["user_id", "company_id"], name: "index_recruiter_memberships_on_user_id_and_company_id", unique: true
     t.index ["user_id"], name: "index_recruiter_memberships_on_user_id"
   end

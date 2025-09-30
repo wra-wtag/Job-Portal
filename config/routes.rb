@@ -5,12 +5,12 @@ Rails.application.routes.draw do
   }
   root "home#index"
 
-  get 'profile', to: 'users#show'
-  get 'profile/edit', to: 'users#edit'
-  patch 'profile', to: 'users#update'
-  get 'profile/setup', to: 'users#setup'
-  
-  resources :jobs, only: [:index, :show] do
+  get "profile", to: "users#show"
+  get "profile/edit", to: "users#edit"
+  patch "profile", to: "users#update"
+  get "profile/setup", to: "users#setup"
+
+  resources :jobs, only: [ :index, :show ] do
     member do
       post :bookmark
       delete :unbookmark
@@ -19,13 +19,13 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :applications, only: [:index, :show] do
+  resources :applications, only: [ :index, :show ] do
     member do
       patch :withdraw
     end
   end
 
-  resources :bookmarks, only: [:index, :destroy]
+  resources :bookmarks, only: [ :index, :destroy ]
 
   get 'recruiter/onboarding', to: 'recruiter_onboarding#index'
   get 'recruiter/onboarding/join_company', to: 'recruiter_onboarding#join_company', as: 'join_company_recruiter_onboarding'
@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :recruiter_requests, only: [:index, :show] do
+    resources :recruiter_requests, only: [ :index, :show ] do
       member do
         patch :approve
         patch :reject
@@ -100,7 +100,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  require 'sidekiq/web'
-  mount Sidekiq::Web => '/sidekiq' if Rails.env.development?
+  require "sidekiq/web"
+  mount Sidekiq::Web => "/sidekiq" if Rails.env.development?
   mount LetterOpenerWeb::Engine, at: "/letter_opener"
 end
