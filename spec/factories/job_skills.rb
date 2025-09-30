@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :job_skill do
     association :job
     association :skill
-    required { [true, false].sample }
+    required { [ true, false ].sample }
 
     trait :required do
       required { true }

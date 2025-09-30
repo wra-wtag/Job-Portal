@@ -10,7 +10,7 @@ class CreateJobRecommendations < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     add_index :job_recommendations, :scheduled_for
   end
 end

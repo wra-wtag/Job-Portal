@@ -7,28 +7,28 @@ class RecruiterMembership < ApplicationRecord
   validates :role, inclusion: { in: ROLES }
   validates :status, inclusion: { in: STATUSES }
   validates :user_id, uniqueness: { scope: :company_id }
-  
-  scope :managers, -> { where(role: 'manager') }
-  scope :standard, -> { where(role: 'standard') }
+
+  scope :managers, -> { where(role: "manager") }
+  scope :standard, -> { where(role: "standard") }
   scope :primary, -> { where(is_primary: true) }
-  scope :pending, -> { where(status: 'pending') }
-  scope :approved, -> { where(status: 'approved') }
-  scope :rejected, -> { where(status: 'rejected') }
+  scope :pending, -> { where(status: "pending") }
+  scope :approved, -> { where(status: "approved") }
+  scope :rejected, -> { where(status: "rejected") }
 
   def manager?
-    role == 'manager'
+    role == "manager"
   end
 
   def standard?
-    role == 'standard'
+    role == "standard"
   end
 
   def pending?
-    status == 'pending'
+    status == "pending"
   end
 
   def approved?
-    status == 'approved'
+    status == "approved"
   end
 
   def can_manage_recruiters?
@@ -36,10 +36,10 @@ class RecruiterMembership < ApplicationRecord
   end
 
   def approve!
-    update!(status: 'approved')
+    update!(status: "approved")
   end
 
   def reject!
-    update!(status: 'rejected')
+    update!(status: "rejected")
   end
 end

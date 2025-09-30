@@ -6,7 +6,7 @@ class JobRecommendation < ApplicationRecord
   scope :pending, -> { where(sent_at: nil) }
   scope :sent, -> { where.not(sent_at: nil) }
   scope :scheduled_for_today, -> { where(scheduled_for: Date.current.beginning_of_day..Date.current.end_of_day) }
-  
+
   def sent?
     sent_at.present?
   end
@@ -16,9 +16,9 @@ class JobRecommendation < ApplicationRecord
   end
 
   def recommended_jobs
-    return [] unless payload['job_ids'].present?
-    
-    Job.where(id: payload['job_ids']).active.limit(10)
+    return [] unless payload["job_ids"].present?
+
+    Job.where(id: payload["job_ids"]).active.limit(10)
   end
 
   def mark_as_sent!
