@@ -1,7 +1,7 @@
 class RecruiterMembershipPolicy < ApplicationPolicy
   def approve_request?
     user.present? && (
-      user.admin? || 
+      user.admin? ||
       (user.recruiter? && user.can_manage_company?(record.company))
     )
   end

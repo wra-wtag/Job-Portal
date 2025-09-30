@@ -1,5 +1,5 @@
 class Recruiter::CompaniesController < ApplicationController
-  before_action :set_company, only: [:show, :edit, :update]
+  before_action :set_company, only: [ :show, :edit, :update ]
 
   def show
     authorize @company
@@ -7,7 +7,7 @@ class Recruiter::CompaniesController < ApplicationController
 
   def edit
     authorize @company
-    
+
     unless current_user.can_manage_company?(@company)
       redirect_to recruiter_dashboard_path, alert: "Only company managers can edit the company profile."
     end

@@ -10,7 +10,7 @@ class Recruiter::DashboardController < Recruiter::ApplicationController
       draft_jobs: @company.jobs.where(status: "draft").count,
       closed_jobs: @company.jobs.where(status: "closed").count,
       total_applications: Application.joins(:job).where(jobs: { company: @company }).count,
-      new_applications: Application.joins(:job).where(jobs: { company: @company }, applications: { status: 'applied' }).count,
+      new_applications: Application.joins(:job).where(jobs: { company: @company }, applications: { status: "applied" }).count,
       shortlisted_applications: Application.joins(:job).where(jobs: { company: @company }, applications: { status: "shortlisted" }).count
     }
 
@@ -27,17 +27,17 @@ class Recruiter::DashboardController < Recruiter::ApplicationController
                            .includes(:applications)
                            .order(created_at: :desc)
                            .limit(5)
-    
+
     @recent_applications = Application.joins(:job)
                                       .includes(:user, job: :company)
                                       .where(jobs: { company: @company })
                                       .order(applied_at: :desc)
                                       .limit(10)
-    
+
     if @is_manager
       @pending_team_requests = @company.recruiter_memberships.pending.includes(:user).limit(3)
     end
-    
+
     @job_views_data = @company.jobs.published
                             .group(:title)
                             .sum(:views_count)

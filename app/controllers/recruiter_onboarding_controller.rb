@@ -1,8 +1,8 @@
 class RecruiterOnboardingController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_recruiter!
-  before_action :check_if_already_approved!, only: [:index]
-  layout 'application'
+  before_action :check_if_already_approved!, only: [ :index ]
+  layout "application"
 
   def index
     @has_pending = current_user.recruiter_memberships.pending.any? || current_user.companies.pending.any?
@@ -34,8 +34,8 @@ class RecruiterOnboardingController < ApplicationController
 
     @membership_request = current_user.recruiter_memberships.build(
       company: @company,
-      role: 'standard',
-      status: 'pending',
+      role: "standard",
+      status: "pending",
       title: params[:title],
       contact_info: {
         message: params[:message],
@@ -47,13 +47,13 @@ class RecruiterOnboardingController < ApplicationController
       @company.recruiter_memberships.approved.managers.each do |manager_membership|
         Notification.create!(
           user: manager_membership.user,
-          kind: 'recruiter_request',
-          title: 'New Recruiter Request',
+          kind: "recruiter_request",
+          title: "New Recruiter Request",
           content: "#{current_user.full_name} wants to join #{@company.name} as a recruiter"
         )
       end
 
-      redirect_to recruiter_pending_path, notice: 'Your request has been sent to the company managers!'
+      redirect_to recruiter_pending_path, notice: "Your request has been sent to the company managers!"
     else
       render :join_company
     end
@@ -63,7 +63,7 @@ class RecruiterOnboardingController < ApplicationController
     @pending_companies = current_user.companies.pending.includes(:approved_by)
     @pending_memberships = current_user.recruiter_memberships.pending.includes(:company)
     @approved_memberships = current_user.recruiter_memberships.approved.includes(:company)
-    
+
     if @approved_memberships.any? { |m| m.company.approved? }
       redirect_to recruiter_dashboard_path
     end
