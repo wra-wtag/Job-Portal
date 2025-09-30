@@ -65,7 +65,7 @@
             </div>
             <div>
               <% unless membership.user == current_user || membership.is_primary %>
-                <%= link_to "Remove", remove_recruiter_recruiter_team_path(membership), method: :delete,
+                <%= button_to "Remove", remove_recruiter_recruiter_team_path(membership), method: :delete,
                     class: "px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700",
                     confirm: "Are you sure you want to remove #{membership.user.full_name} from the team?" %>
               <% end %>
