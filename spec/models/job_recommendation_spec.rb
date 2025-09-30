@@ -39,7 +39,7 @@ RSpec.describe JobRecommendation, type: :model do
     let(:job1) { create(:job, :published) }
     let(:job2) { create(:job, :published) }
     let(:job3) { create(:job, :closed) } # should not be returned by recommended_jobs
-    let(:recommendation) { create(:job_recommendation, payload: { 'job_ids' => [job1.id, job2.id, job3.id] }) }
+    let(:recommendation) { create(:job_recommendation, payload: { 'job_ids' => [ job1.id, job2.id, job3.id ] }) }
 
     it "#sent? returns true if sent_at is present" do
       recommendation.mark_as_sent!

@@ -5,5 +5,5 @@ class UserSkill < ApplicationRecord
   belongs_to :user
   belongs_to :skill
 
-  scope :by_experience, ->(years) { where('experience_years >= ?', years) }
+  scope :by_experience, ->(years) { where("experience_years >= ?", years) }
 end

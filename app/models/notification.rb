@@ -2,7 +2,7 @@ class Notification < ApplicationRecord
   belongs_to :user
 
   KINDS = %w[new_job_application application_update job_recommendation system_announcement].freeze
-  
+
   validates :kind, inclusion: { in: KINDS }
   validates :title, presence: true
 

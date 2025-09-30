@@ -72,7 +72,7 @@ Rails.application.configure do
   # Show emails in the browser instead of sending
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_deliveries = true
-  
+
   # If you want a web UI at /letter_opener
   config.action_mailer.delivery_method = :letter_opener_web
 end

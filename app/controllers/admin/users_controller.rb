@@ -1,13 +1,13 @@
 class Admin::UsersController < Admin::ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @users = User.includes(:companies, :applications)
                  .order(created_at: :desc)
                  .page(params[:page])
-                 
+
     @users = @users.where(role: params[:role]) if params[:role].present?
-    
+
     @job_seekers_count = User.job_seekers.count
     @recruiters_count = User.recruiters.count
     @admins_count = User.admins.count
@@ -15,10 +15,10 @@ class Admin::UsersController < Admin::ApplicationController
 
   def show
     case @user.role
-    when 'job_seeker'
+    when "job_seeker"
       @applications = @user.applications.includes(:job)
       @bookmarks = @user.bookmarks.includes(:job)
-    when 'recruiter'
+    when "recruiter"
       @companies = @user.companies
       @posted_jobs = @user.posted_jobs.includes(:company)
     end
@@ -29,7 +29,7 @@ class Admin::UsersController < Admin::ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to admin_user_path(@user), notice: 'User updated successfully!'
+      redirect_to admin_user_path(@user), notice: "User updated successfully!"
     else
       render :edit
     end
@@ -37,12 +37,12 @@ class Admin::UsersController < Admin::ApplicationController
 
   def destroy
     if @user == current_user
-      redirect_to admin_users_path, alert: 'You cannot delete yourself!'
+      redirect_to admin_users_path, alert: "You cannot delete yourself!"
       return
     end
 
     @user.destroy
-    redirect_to admin_users_path, notice: 'User deleted successfully!'
+    redirect_to admin_users_path, notice: "User deleted successfully!"
   end
 
   private
