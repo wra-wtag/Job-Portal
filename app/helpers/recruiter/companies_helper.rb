@@ -1,0 +1,2 @@
+module Recruiter::CompaniesHelper
+end
