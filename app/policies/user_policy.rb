@@ -6,7 +6,7 @@ class UserPolicy < ApplicationPolicy
     def edit?
         user.present? && (user == record || user.admin?)
     end
-    
+
     def update?
         edit?
     end

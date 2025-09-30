@@ -15,7 +15,7 @@ class CreateCompanies < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     add_index :companies, :slug, unique: true
     add_index :companies, :status
     add_index :companies, :industry

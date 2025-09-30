@@ -233,6 +233,11 @@ GEM
       logger (~> 1.6)
     letter_opener (1.10.0)
       launchy (>= 2.2, < 4)
+    letter_opener_web (3.0.0)
+      actionmailer (>= 6.1)
+      letter_opener (~> 1.9)
+      railties (>= 6.1)
+      rexml
     lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.24.1)
@@ -544,6 +549,7 @@ DEPENDENCIES
   kamal
   kaminari
   letter_opener
+  letter_opener_web
   mini_magick
   pg (~> 1.1)
   phony_rails
@@ -553,6 +559,7 @@ DEPENDENCIES
   rails (~> 8.0.2, >= 8.0.2.1)
   redis
   rspec-rails
+  rubocop (~> 1.80)
   rubocop-rails-omakase
   selenium-webdriver
   shoulda-matchers
