@@ -3,7 +3,7 @@ FactoryBot.define do
     association :user
 
     title { Faker::Lorem.sentence(word_count: 5) }
-    kind { Notification::KINDS.sample }
+    kind { Notification.kinds.keys.sample }
     read_at { nil }
 
     trait :read do

@@ -9,7 +9,10 @@ RSpec.describe Notification, type: :model do
     subject { build(:notification) }
 
     it { should validate_presence_of(:title) }
-    it { should validate_inclusion_of(:kind).in_array(Notification::KINDS) }
+  end
+
+  describe "enums" do
+    it { should define_enum_for(:kind).with_values(new_job_application: 0, application_update: 1, job_recommendation: 2, system_announcement: 3) }
   end
 
   describe "scopes" do

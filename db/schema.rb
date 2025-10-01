@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_01_080300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,10 +46,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
     t.bigint "job_id", null: false
     t.bigint "user_id", null: false
     t.text "cover_letter"
-    t.string "status", default: "applied", null: false
     t.datetime "applied_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status"
     t.index ["applied_at"], name: "index_applications_on_applied_at"
     t.index ["job_id", "user_id"], name: "index_applications_on_job_id_and_user_id", unique: true
     t.index ["job_id"], name: "index_applications_on_job_id"
@@ -76,11 +76,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
     t.string "industry"
     t.string "size"
     t.string "logo"
-    t.string "status", default: "pending", null: false
     t.datetime "approved_at"
     t.bigint "approved_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status"
     t.index ["approved_by_id"], name: "index_companies_on_approved_by_id"
     t.index ["industry"], name: "index_companies_on_industry"
     t.index ["slug"], name: "index_companies_on_slug", unique: true
@@ -116,11 +116,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
     t.bigint "company_id", null: false
     t.bigint "posted_by_user_id", null: false
     t.text "description", null: false
-    t.string "employment_type", null: false
     t.decimal "salary_min", precision: 10, scale: 2
     t.decimal "salary_max", precision: 10, scale: 2
     t.string "currency", default: "USD"
-    t.string "status", default: "draft", null: false
     t.boolean "visibility", default: true
     t.datetime "published_at"
     t.datetime "expires_at"
@@ -131,6 +129,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
     t.boolean "is_remote", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "employment_type"
+    t.integer "status"
     t.index ["company_id"], name: "index_jobs_on_company_id"
     t.index ["employment_type"], name: "index_jobs_on_employment_type"
     t.index ["expires_at"], name: "index_jobs_on_expires_at"
@@ -141,12 +141,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
 
   create_table "notifications", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "kind", null: false
     t.string "title", null: false
     t.text "content"
     t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "kind"
     t.index ["kind"], name: "index_notifications_on_kind"
     t.index ["read_at"], name: "index_notifications_on_read_at"
     t.index ["user_id"], name: "index_notifications_on_user_id"
@@ -155,14 +155,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
   create_table "recruiter_memberships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "company_id", null: false
-    t.string "role", default: "standard", null: false
     t.string "title"
     t.boolean "is_primary", default: false
     t.json "contact_info", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "status", default: "pending"
+    t.integer "role"
+    t.integer "status"
     t.index ["company_id"], name: "index_recruiter_memberships_on_company_id"
+    t.index ["role"], name: "index_recruiter_memberships_on_role"
     t.index ["status"], name: "index_recruiter_memberships_on_status"
     t.index ["user_id", "company_id"], name: "index_recruiter_memberships_on_user_id_and_company_id", unique: true
     t.index ["user_id"], name: "index_recruiter_memberships_on_user_id"
@@ -195,7 +196,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
     t.string "last_name", null: false
     t.string "username", null: false
     t.string "password_encrypted"
-    t.string "role", default: "job_seeker", null: false
     t.string "bio"
     t.string "location"
     t.boolean "email_verified", default: false
@@ -215,6 +215,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_032117) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
