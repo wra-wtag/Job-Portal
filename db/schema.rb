@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_01_075452) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_01_080300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -155,14 +155,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_075452) do
   create_table "recruiter_memberships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "company_id", null: false
-    t.string "role", default: "standard", null: false
     t.string "title"
     t.boolean "is_primary", default: false
     t.json "contact_info", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "status", default: "pending"
+    t.integer "role"
+    t.integer "status"
     t.index ["company_id"], name: "index_recruiter_memberships_on_company_id"
+    t.index ["role"], name: "index_recruiter_memberships_on_role"
     t.index ["status"], name: "index_recruiter_memberships_on_status"
     t.index ["user_id", "company_id"], name: "index_recruiter_memberships_on_user_id_and_company_id", unique: true
     t.index ["user_id"], name: "index_recruiter_memberships_on_user_id"
