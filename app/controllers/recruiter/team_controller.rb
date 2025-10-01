@@ -18,7 +18,7 @@ class Recruiter::TeamController < Recruiter::ApplicationController
       content: "You've been approved as a recruiter for #{@company.name}"
     )
 
-    redirect_to recruiter_team_path, notice: "Recruiter request approved!"
+    redirect_to recruiter_team_index_path, notice: "Recruiter request approved!"
   end
 
   def reject_request
@@ -32,27 +32,27 @@ class Recruiter::TeamController < Recruiter::ApplicationController
       content: "Your request to join #{@company.name} as a recruiter has been declined"
     )
 
-    redirect_to recruiter_team_path, notice: "Recruiter request rejected."
+    redirect_to recruiter_team_index_path, notice: "Recruiter request rejected."
   end
 
   def remove_recruiter
     @membership = @company.recruiter_memberships.approved.find(params[:id])
 
     if @membership.user == current_user
-      redirect_to recruiter_team_path, alert: "You cannot remove yourself."
+      redirect_to recruiter_team_index_path, alert: "You cannot remove yourself."
       return
     end
 
     @membership.destroy
 
-    Notification.create!(
-      user: @membership.user,
-      kind: "recruiter_removed",
-      title: "Removed from Company",
-      content: "You've been removed as a recruiter from #{@company.name}"
-    )
+    # Notification.create!(
+    #   user: @membership.user,
+    #   kind: "recruiter_removed",
+    #   title: "Removed from Company",
+    #   content: "You've been removed as a recruiter from #{@company.name}"
+    # )
 
-    redirect_to recruiter_team_path, notice: "Recruiter removed successfully."
+    redirect_to recruiter_team_index_path, notice: "Recruiter removed successfully."
   end
 
   private

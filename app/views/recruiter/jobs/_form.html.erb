@@ -55,7 +55,12 @@
   <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
     <div class="sm:col-span-3">
       <%= f.label :employment_type, "Employment Type", class: "block text-sm font-medium text-gray-700" %>
-      <%= f.select :employment_type, Job::EMPLOYMENT_TYPES.map { |type| [type.humanize, type] }, { prompt: 'Select type' }, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500", required: true %>
+      <%= f.select :employment_type,
+    Job.employment_types.keys.map { |type| [type.humanize, type] },
+    { prompt: 'Select type' },
+    class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500",
+    required: true %>
+
     </div>
 
     <div class="sm:col-span-3">

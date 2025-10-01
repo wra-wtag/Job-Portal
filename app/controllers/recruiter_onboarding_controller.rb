@@ -44,14 +44,14 @@ class RecruiterOnboardingController < ApplicationController
     )
 
     if @membership_request.save
-      @company.recruiter_memberships.approved.managers.each do |manager_membership|
-        Notification.create!(
-          user: manager_membership.user,
-          kind: "recruiter_request",
-          title: "New Recruiter Request",
-          content: "#{current_user.full_name} wants to join #{@company.name} as a recruiter"
-        )
-      end
+      # @company.recruiter_memberships.approved.managers.each do |manager_membership|
+      #   Notification.create!(
+      #     user: manager_membership.user,
+      #     kind: "recruiter_request",
+      #     title: "New Recruiter Request",
+      #     content: "#{current_user.full_name} wants to join #{@company.name} as a recruiter"
+      #   )
+      # end
 
       redirect_to recruiter_pending_path, notice: "Your request has been sent to the company managers!"
     else
