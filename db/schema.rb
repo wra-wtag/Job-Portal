@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_01_080300) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_01_112129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,7 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_080300) do
     t.datetime "applied_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "status"
+    t.integer "status", default: 0, null: false
     t.index ["applied_at"], name: "index_applications_on_applied_at"
     t.index ["job_id", "user_id"], name: "index_applications_on_job_id_and_user_id", unique: true
     t.index ["job_id"], name: "index_applications_on_job_id"
@@ -80,7 +80,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_080300) do
     t.bigint "approved_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "status"
+    t.integer "status", default: 0, null: false
     t.index ["approved_by_id"], name: "index_companies_on_approved_by_id"
     t.index ["industry"], name: "index_companies_on_industry"
     t.index ["slug"], name: "index_companies_on_slug", unique: true
@@ -130,7 +130,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_080300) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "employment_type"
-    t.integer "status"
+    t.integer "status", default: 0, null: false
     t.index ["company_id"], name: "index_jobs_on_company_id"
     t.index ["employment_type"], name: "index_jobs_on_employment_type"
     t.index ["expires_at"], name: "index_jobs_on_expires_at"
@@ -161,7 +161,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_080300) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role"
-    t.integer "status"
+    t.integer "status", default: 0, null: false
     t.index ["company_id"], name: "index_recruiter_memberships_on_company_id"
     t.index ["role"], name: "index_recruiter_memberships_on_role"
     t.index ["status"], name: "index_recruiter_memberships_on_status"
