@@ -1,12 +1,10 @@
 class Job < ApplicationRecord
   belongs_to :company
   belongs_to :posted_by_user, class_name: "User"
-  EMPLOYMENT_TYPES = %w[full_name part_time contract internship temporary].freeze
-  STATUSES = %w[draft published closed].freeze
+  enum :employment_type, { full_time: 0, part_time: 1, contract: 2, internship: 3, temporary: 4 }
+  enum :status, { draft: 0, published: 1, closed: 2 }
 
   validates :title, :description, presence: true
-  validates :employment_type, inclusion: { in: EMPLOYMENT_TYPES }
-  validates :status, inclusion: { in: STATUSES }
   validates :salary_min, :salary_max, numericality: { greater_than: 0 }, allow_blank: true
   validate :salary_max_greater_than_min
 
@@ -16,17 +14,13 @@ class Job < ApplicationRecord
   has_many :job_skills, dependent: :destroy
   has_many :skills, through: :job_skills
 
-  scope :published, -> { where(status: "published") }
+  scope :published, -> { where(status: :published) }
   scope :active, -> { published.where("expires_at > ? OR expires_at IS NULL", Time.current) }
   scope :by_employment_type, ->(type) { where(employment_type: type) }
   scope :with_salary_range, ->(min, max) { where(salary_min: min..max) }
   scope :recent, -> { order(created_at: :desc) }
 
   before_save :set_published_at, if: :status_changed_to_published?
-
-  def published?
-    status == "published"
-  end
 
   def expired?
     expires_at.present? && expires_at < Time.current
@@ -55,11 +49,11 @@ class Job < ApplicationRecord
   def salary_max_greater_than_min
     return unless salary_min.present? && salary_max.present?
 
-    errors.add(:salary_max, "must be greater that minimum salary") if salary_max < salary_min
+    errors.add(:salary_max, "must be greater than minimum salary") if salary_max < salary_min
   end
 
   def status_changed_to_published?
-    status_changed? && status == "published"
+    saved_change_to_status? && published?
   end
 
   def set_published_at

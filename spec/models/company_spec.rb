@@ -6,7 +6,6 @@ RSpec.describe Company, type: :model do
     it { should validate_uniqueness_of(:name) }
     it { should validate_presence_of(:slug) }
     it { should validate_uniqueness_of(:slug) }
-    it { should validate_inclusion_of(:status).in_array(Company::STATUSES) }
     it { should validate_inclusion_of(:size).in_array(Company::SIZES).allow_blank }
     it 'validates the format of website with URI regex' do
       should allow_value('https://www.example.com').for(:website)
@@ -23,6 +22,10 @@ RSpec.describe Company, type: :model do
     it "has a logo attached" do
       expect(Company.new.logo).to be_an_instance_of(ActiveStorage::Attached::One)
     end
+  end
+
+  describe "enums" do
+    it { should define_enum_for(:status).with_values(pending: 0, approved: 1, rejected: 2) }
   end
 
   describe "scopes" do

@@ -8,8 +8,6 @@ RSpec.describe RecruiterMembership, type: :model do
 
   describe "validations" do
     subject { build(:recruiter_membership) }
-
-    it { should validate_inclusion_of(:role).in_array(RecruiterMembership::ROLES) }
     it { should validate_uniqueness_of(:user_id).scoped_to(:company_id) }
   end
 
@@ -34,8 +32,9 @@ RSpec.describe RecruiterMembership, type: :model do
   end
 
   describe "instance methods" do
-    let(:manager) { create(:recruiter_membership, :manager) }
-    let(:standard) { create(:recruiter_membership, :standard) }
+    let(:manager) { create(:recruiter_membership, :manager, :approved) }
+    let(:standard) { create(:recruiter_membership, :standard, :approved) }
+    let(:pending_manager) { create(:recruiter_membership, :manager, :pending) }
 
     it "#manager? returns true for manager role" do
       expect(manager.manager?).to be true
@@ -47,9 +46,10 @@ RSpec.describe RecruiterMembership, type: :model do
       expect(manager.standard?).to be false
     end
 
-    it "#can_manage_recruiters? returns true for manager" do
+    it "#can_manage_recruiters? returns true only for approved managers" do
       expect(manager.can_manage_recruiters?).to be true
       expect(standard.can_manage_recruiters?).to be false
+      expect(pending_manager.can_manage_recruiters?).to be false
     end
   end
 end
