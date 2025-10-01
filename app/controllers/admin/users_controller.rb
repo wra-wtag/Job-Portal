@@ -6,7 +6,7 @@ class Admin::UsersController < Admin::ApplicationController
                  .order(created_at: :desc)
                  .page(params[:page])
 
-    @users = @users.where(role: params[:role]) if params[:role].present?
+    @users = @users.where(role: params[:role].to_sym) if params[:role].present?
 
     @job_seekers_count = User.job_seekers.count
     @recruiters_count = User.recruiters.count
@@ -15,10 +15,10 @@ class Admin::UsersController < Admin::ApplicationController
 
   def show
     case @user.role
-    when "job_seeker"
+    when :job_seeker
       @applications = @user.applications.includes(:job)
       @bookmarks = @user.bookmarks.includes(:job)
-    when "recruiter"
+    when :recruiter
       @companies = @user.companies
       @posted_jobs = @user.posted_jobs.includes(:company)
     end
