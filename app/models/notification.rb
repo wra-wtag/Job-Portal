@@ -1,7 +1,7 @@
 class Notification < ApplicationRecord
   belongs_to :user
   enum :kind, { new_job_application: 0, application_update: 1, job_recommendation: 2, system_announcement: 3 }
-  
+
   validates :title, presence: true
 
   scope :unread, -> { where(read_at: nil) }

@@ -1,7 +1,7 @@
 class ChangeUserRoleToEnum < ActiveRecord::Migration[8.0]
   def up
     add_column :users, :role_temp, :integer
-    
+
     User.reset_column_information
     User.find_each do |user|
       case user.role
@@ -15,13 +15,13 @@ class ChangeUserRoleToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :users, :role
     rename_column :users, :role_temp, :role
-    
+
     add_index :users, :role
   end
 
   def down
     add_column :users, :role_temp, :string
-    
+
     User.reset_column_information
     User.find_each do |user|
       case user.role
@@ -35,7 +35,7 @@ class ChangeUserRoleToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :users, :role
     rename_column :users, :role_temp, :role
-    
+
     add_index :users, :role
   end
 end

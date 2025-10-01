@@ -1,7 +1,7 @@
 class ChangeNotificationKindToEnum < ActiveRecord::Migration[8.0]
   def up
     add_column :notifications, :kind_temp, :integer
-    
+
     Notification.reset_column_information
     Notification.find_each do |notification|
       case notification.kind
@@ -17,13 +17,13 @@ class ChangeNotificationKindToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :notifications, :kind
     rename_column :notifications, :kind_temp, :kind
-    
+
     add_index :notifications, :kind
   end
 
   def down
     add_column :notifications, :kind_temp, :string
-    
+
     Notification.reset_column_information
     Notification.find_each do |notification|
       case notification.kind
@@ -39,7 +39,7 @@ class ChangeNotificationKindToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :notifications, :kind
     rename_column :notifications, :kind_temp, :kind
-    
+
     add_index :notifications, :kind
   end
 end

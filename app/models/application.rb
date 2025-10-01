@@ -1,7 +1,7 @@
 class Application < ApplicationRecord
   belongs_to :job, counter_cache: :applications_count
   belongs_to :user
-  
+
   enum :status, { applied: 0, viewed: 1, shortlisted: 2, rejected: 3, hired: 4, withdrawn: 5 }
 
   validates :job_id, uniqueness: { scope: :user_id, message: "You have already applied for this job" }
@@ -10,7 +10,7 @@ class Application < ApplicationRecord
 
   scope :recent, -> { order(applied_at: :desc) }
   scope :by_status, ->(status) { where(status: status) }
-  scope :pending_review, -> { where(status: [:applied, :viewed]) }
+  scope :pending_review, -> { where(status: [ :applied, :viewed ]) }
 
   before_create :set_applied_at
 
@@ -19,7 +19,7 @@ class Application < ApplicationRecord
   end
 
   def can_withdraw?
-    [:applied, :viewed].include?(status.to_sym)
+    [ :applied, :viewed ].include?(status.to_sym)
   end
 
   def withdraw!

@@ -7,7 +7,7 @@ class Company < ApplicationRecord
   validates :slug, presence: true, uniqueness: true
   validates :size, inclusion: { in: SIZES }, allow_blank: true
   validates :website, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]) }, allow_blank: true
-  
+
   has_many :recruiter_memberships, dependent: :destroy
   has_many :recruiters, through: :recruiter_memberships, source: :user
   has_many :jobs, dependent: :destroy

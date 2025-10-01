@@ -1,7 +1,7 @@
 class ChangeJobEmploymentTypeToEnum < ActiveRecord::Migration[8.0]
   def up
     add_column :jobs, :employment_type_temp, :integer
-    
+
     Job.reset_column_information
     Job.find_each do |job|
       case job.employment_type
@@ -19,13 +19,13 @@ class ChangeJobEmploymentTypeToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :jobs, :employment_type
     rename_column :jobs, :employment_type_temp, :employment_type
-    
+
     add_index :jobs, :employment_type
   end
 
   def down
     add_column :jobs, :employment_type_temp, :string
-    
+
     Job.reset_column_information
     Job.find_each do |job|
       case job.employment_type
@@ -43,7 +43,7 @@ class ChangeJobEmploymentTypeToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :jobs, :employment_type
     rename_column :jobs, :employment_type_temp, :employment_type
-    
+
     add_index :jobs, :employment_type
   end
 end

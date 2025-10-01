@@ -1,7 +1,7 @@
 class ChangeApplicationStatusToEnum < ActiveRecord::Migration[8.0]
   def up
     add_column :applications, :status_temp, :integer
-    
+
     Application.reset_column_information
     Application.find_each do |application|
       case application.status
@@ -21,13 +21,13 @@ class ChangeApplicationStatusToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :applications, :status
     rename_column :applications, :status_temp, :status
-    
+
     add_index :applications, :status
   end
 
   def down
     add_column :applications, :status_temp, :string
-    
+
     Application.reset_column_information
     Application.find_each do |application|
       case application.status
@@ -47,7 +47,7 @@ class ChangeApplicationStatusToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :applications, :status
     rename_column :applications, :status_temp, :status
-    
+
     add_index :applications, :status
   end
 end

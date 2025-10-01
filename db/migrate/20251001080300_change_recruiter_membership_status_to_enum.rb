@@ -1,7 +1,7 @@
 class ChangeRecruiterMembershipStatusToEnum < ActiveRecord::Migration[8.0]
   def up
     add_column :recruiter_memberships, :status_temp, :integer
-    
+
     RecruiterMembership.reset_column_information
     RecruiterMembership.find_each do |recruiter_membership|
       case recruiter_membership.status
@@ -15,13 +15,13 @@ class ChangeRecruiterMembershipStatusToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :recruiter_memberships, :status
     rename_column :recruiter_memberships, :status_temp, :status
-    
+
     add_index :recruiter_memberships, :status
   end
 
   def down
     add_column :recruiter_memberships, :status_temp, :string
-    
+
     RecruiterMembership.reset_column_information
     RecruiterMembership.find_each do |recruiter_membership|
       case recruiter_membership.status
@@ -35,7 +35,7 @@ class ChangeRecruiterMembershipStatusToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :recruiter_memberships, :status
     rename_column :recruiter_memberships, :status_temp, :status
-    
+
     add_index :recruiter_memberships, :status
   end
 end

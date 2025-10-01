@@ -6,7 +6,7 @@ FactoryBot.define do
     title { Faker::Job.title }
     description { Faker::Lorem.paragraph(sentence_count: 5) }
     employment_type { Job.employment_types.keys.sample }
-    status { :draft }                   
+    status { :draft }
     salary_min { Faker::Number.between(from: 30_000, to: 50_000) }
     salary_max { Faker::Number.between(from: 60_000, to: 100_000) }
     currency { "USD" }

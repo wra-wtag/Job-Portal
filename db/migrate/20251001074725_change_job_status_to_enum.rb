@@ -1,7 +1,7 @@
 class ChangeJobStatusToEnum < ActiveRecord::Migration[8.0]
   def up
     add_column :jobs, :status_temp, :integer
-    
+
     Job.reset_column_information
     Job.find_each do |job|
       case job.status
@@ -15,13 +15,13 @@ class ChangeJobStatusToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :jobs, :status
     rename_column :jobs, :status_temp, :status
-    
+
     add_index :jobs, :status
   end
 
   def down
     add_column :jobs, :status_temp, :string
-    
+
     Job.reset_column_information
     Job.find_each do |job|
       case job.status
@@ -35,7 +35,7 @@ class ChangeJobStatusToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :jobs, :status
     rename_column :jobs, :status_temp, :status
-    
+
     add_index :jobs, :status
   end
 end

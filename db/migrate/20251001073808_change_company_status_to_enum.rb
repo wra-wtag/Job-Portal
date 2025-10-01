@@ -1,7 +1,7 @@
 class ChangeCompanyStatusToEnum < ActiveRecord::Migration[8.0]
   def up
     add_column :companies, :status_temp, :integer
-    
+
     Company.reset_column_information
     Company.find_each do |company|
       case company.status
@@ -15,13 +15,13 @@ class ChangeCompanyStatusToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :companies, :status
     rename_column :companies, :status_temp, :status
-    
+
     add_index :companies, :status
   end
 
   def down
     add_column :companies, :status_temp, :string
-    
+
     Application.reset_column_information
     Application.find_each do |application|
       case application.status
@@ -35,7 +35,7 @@ class ChangeCompanyStatusToEnum < ActiveRecord::Migration[8.0]
     end
     remove_column :companies, :status
     rename_column :companies, :status_temp, :status
-    
+
     add_index :companies, :status
   end
 end
