@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_01_073808) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_01_074725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -116,11 +116,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_073808) do
     t.bigint "company_id", null: false
     t.bigint "posted_by_user_id", null: false
     t.text "description", null: false
-    t.string "employment_type", null: false
     t.decimal "salary_min", precision: 10, scale: 2
     t.decimal "salary_max", precision: 10, scale: 2
     t.string "currency", default: "USD"
-    t.string "status", default: "draft", null: false
     t.boolean "visibility", default: true
     t.datetime "published_at"
     t.datetime "expires_at"
@@ -131,6 +129,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_073808) do
     t.boolean "is_remote", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "employment_type"
+    t.integer "status"
     t.index ["company_id"], name: "index_jobs_on_company_id"
     t.index ["employment_type"], name: "index_jobs_on_employment_type"
     t.index ["expires_at"], name: "index_jobs_on_expires_at"
