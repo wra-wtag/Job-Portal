@@ -23,7 +23,7 @@ class Admin::RecruiterRequestsController < Admin::ApplicationController
 
     Notification.create!(
       user: @request.user,
-      kind: "recruiter_approved",
+      kind: :recruiter_rejected,
       title: "Recruiter Request Approved!",
       content: "Admin has approved your request to join #{@request.company.name} as a recruiter"
     )
@@ -31,7 +31,7 @@ class Admin::RecruiterRequestsController < Admin::ApplicationController
     @request.company.recruiter_memberships.approved.managers.each do |manager_membership|
       Notification.create!(
         user: manager_membership.user,
-        kind: "admin_approved_recruiter",
+        kind: :admin_approved_recruiter,
         title: "New Team Member Added",
         content: "Admin approved #{@request.user.full_name} to join your company as a recruiter"
       )
@@ -45,7 +45,7 @@ class Admin::RecruiterRequestsController < Admin::ApplicationController
 
     Notification.create!(
       user: @request.user,
-      kind: "recruiter_rejected",
+      kind: :recruiter_rejected,
       title: "Recruiter Request Declined",
       content: "Your request to join #{@request.company.name} has been declined by admin"
     )

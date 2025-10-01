@@ -2,8 +2,8 @@ class Admin::DashboardController < Admin::ApplicationController
     def index
         @stats = {
         total_users: User.count,
-        job_seekers: User.job_seekers.count,
-        recruiters: User.recruiters.count,
+        job_seekers: User.job_seeker.count,
+        recruiters: User.recruiter.count,
         recruiter_managers: User.joins(:recruiter_memberships).where(recruiter_memberships: { role: "manager", status: "approved" }).distinct.count,
         standard_recruiters: User.joins(:recruiter_memberships).where(recruiter_memberships: { role: "standard", status: "approved" }).distinct.count,
         pending_companies: Company.pending.count,

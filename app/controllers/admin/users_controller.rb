@@ -8,9 +8,9 @@ class Admin::UsersController < Admin::ApplicationController
 
     @users = @users.where(role: params[:role]) if params[:role].present?
 
-    @job_seekers_count = User.job_seekers.count
-    @recruiters_count = User.recruiters.count
-    @admins_count = User.admins.count
+    @job_seekers_count = User.job_seeker.count
+    @recruiters_count = User.recruiter.count
+    @admins_count = User.admin.count
   end
 
   def show

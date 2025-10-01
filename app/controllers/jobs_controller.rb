@@ -21,7 +21,7 @@ class JobsController < ApplicationController
     @locations = Job.distinct.pluck(:location).compact.sort
 
     @total_jobs = Job.published.active.count
-    @companies_hiring = Company.joins(:jobs).where(jobs: { status: "published" }).distinct.count
+    @companies_hiring = Company.joins(:jobs).where(jobs: { status: :published }).distinct.count
   end
 
   def show
