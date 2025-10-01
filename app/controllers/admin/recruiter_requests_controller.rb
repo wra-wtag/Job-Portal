@@ -23,7 +23,7 @@ class Admin::RecruiterRequestsController < Admin::ApplicationController
 
     Notification.create!(
       user: @request.user,
-      kind: :recruiter_rejected,
+      kind: :recruiter_approved,
       title: "Recruiter Request Approved!",
       content: "Admin has approved your request to join #{@request.company.name} as a recruiter"
     )

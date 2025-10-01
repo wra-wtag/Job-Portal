@@ -16,8 +16,8 @@ class CompaniesController < ApplicationController
       RecruiterMembership.create!(
         user: current_user,
         company: @company,
-        role: "manager",
-        status: "pending",
+        role: :manager,
+        status: :pending,
         is_primary: true,
         title: "Founder"
       )
