@@ -1,45 +1,28 @@
 class RecruiterMembership < ApplicationRecord
   belongs_to :user
   belongs_to :company
-  ROLES = %w[standard manager].freeze
-  STATUSES = %w[pending approved rejected].freeze
 
-  validates :role, inclusion: { in: ROLES }
-  validates :status, inclusion: { in: STATUSES }
+  enum :role, { standard: 0, manager: 1 }
+  enum :status, { pending: 0, approved: 1, rejected: 2 }
+
   validates :user_id, uniqueness: { scope: :company_id }
 
-  scope :managers, -> { where(role: "manager") }
-  scope :standard, -> { where(role: "standard") }
+  scope :managers, -> { where(role: :manager) }
+  scope :standard, -> { where(role: :standard) }
   scope :primary, -> { where(is_primary: true) }
-  scope :pending, -> { where(status: "pending") }
-  scope :approved, -> { where(status: "approved") }
-  scope :rejected, -> { where(status: "rejected") }
-
-  def manager?
-    role == "manager"
-  end
-
-  def standard?
-    role == "standard"
-  end
-
-  def pending?
-    status == "pending"
-  end
-
-  def approved?
-    status == "approved"
-  end
+  scope :pending, -> { where(status: :pending) }
+  scope :approved, -> { where(status: :approved) }
+  scope :rejected, -> { where(status: :rejected) }
 
   def can_manage_recruiters?
     manager? && approved?
   end
 
   def approve!
-    update!(status: "approved")
+    update!(status: :approved)
   end
 
   def reject!
-    update!(status: "rejected")
+    update!(status: :rejected)
   end
 end
