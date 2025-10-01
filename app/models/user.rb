@@ -4,11 +4,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable
 
-  ROLES = %w[job_seeker recruiter admin].freeze
+  enum :role, { job_seeker: 0, recruiter: 1, admin: 2 }
 
   validates :first_name, :last_name, presence: true
   validates :username, presence: true, uniqueness: { case_sensitive: false }
-  validates :role, inclusion: { in: ROLES }
   validates :email, email: true
 
   has_many :applications, dependent: :destroy
@@ -27,24 +26,8 @@ class User < ApplicationRecord
 
   has_one_attached :resume
 
-  scope :job_seekers, -> { where(role: "job_seeker") }
-  scope :recruiters, -> { where(role: "recruiter") }
-  scope :admins, -> { where(role: "admin") }
-
   def full_name
     "#{first_name} #{last_name}"
-  end
-
-  def job_seeker?
-    role == "job_seeker"
-  end
-
-  def recruiter?
-    role == "recruiter"
-  end
-
-  def admin?
-    role == "admin"
   end
 
   def primary_company

@@ -16,8 +16,6 @@ RSpec.describe Job, type: :model do
 
     it { should validate_presence_of(:title) }
     it { should validate_presence_of(:description) }
-    it { should validate_inclusion_of(:employment_type).in_array(Job::EMPLOYMENT_TYPES) }
-    it { should validate_inclusion_of(:status).in_array(Job::STATUSES) }
     it { should allow_value(nil).for(:salary_min) }
     it { should allow_value(nil).for(:salary_max) }
     it { should validate_numericality_of(:salary_min).is_greater_than(0).allow_nil }
@@ -26,8 +24,13 @@ RSpec.describe Job, type: :model do
     it "validates salary_max > salary_min" do
       job = build(:job, salary_min: 50_000, salary_max: 40_000)
       expect(job).not_to be_valid
-      expect(job.errors[:salary_max]).to include("must be greater that minimum salary")
+      expect(job.errors[:salary_max]).to include("must be greater than minimum salary")
     end
+  end
+
+  describe "enums" do
+    it { should define_enum_for(:employment_type).with_values(full_time: 0, part_time: 1, contract: 2, internship: 3, temporary: 4) }
+    it { should define_enum_for(:status).with_values(draft: 0, published: 1, closed: 2) }
   end
 
   describe "scopes" do

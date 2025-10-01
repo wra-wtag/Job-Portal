@@ -8,7 +8,6 @@ RSpec.describe User, type: :model do
     it { should validate_presence_of(:last_name) }
     it { should validate_presence_of(:username) }
     it { should validate_uniqueness_of(:username).case_insensitive }
-    it { should validate_inclusion_of(:role).in_array(User::ROLES) }
   end
 
   describe "associations" do
@@ -29,37 +28,50 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "enums" do
+    it { should define_enum_for(:role).with_values(job_seeker: 0, recruiter: 1, admin: 2) }
+  end
+
   describe "scopes" do
-    let!(:job_seeker) { create(:user, :job_seeker) }
-    let!(:recruiter) { create(:user, :recruiter) }
-    let!(:admin) { create(:user, :admin) }
+    let!(:job_seeker) { create(:user, role: :job_seeker) }
+    let!(:recruiter) { create(:user, role: :recruiter) }
+    let!(:admin) { create(:user, role: :admin) }
 
     it "returns job seekers" do
-      expect(User.job_seekers).to include(job_seeker)
-      expect(User.job_seekers).not_to include(recruiter, admin)
+      expect(User.job_seeker).to include(job_seeker)
+      expect(User.job_seeker).not_to include(recruiter, admin)
     end
 
     it "returns recruiters" do
-      expect(User.recruiters).to include(recruiter)
-      expect(User.recruiters).not_to include(job_seeker, admin)
+      expect(User.recruiter).to include(recruiter)
+      expect(User.recruiter).not_to include(job_seeker, admin)
+    end
+
+    it "returns admins" do
+      expect(User.admin).to include(admin)
+      expect(User.admin).not_to include(job_seeker, recruiter)
     end
   end
 
-  describe "methods" do
+  describe "instance methods" do
     let(:user) { create(:user, first_name: "John", last_name: "Doe") }
 
-    it "returns full name" do
-      expect(user.full_name).to eq("John Doe")
+    describe "#full_name" do
+      it "returns full name" do
+        expect(user.full_name).to eq("John Doe")
+      end
     end
 
-    it "checks role methods" do
-      job_seeker = create(:user, :job_seeker)
-      recruiter = create(:user, :recruiter)
-      admin = create(:user, :admin)
+    describe "role helper methods" do
+      it "checks role methods" do
+        job_seeker = create(:user, role: :job_seeker)
+        recruiter = create(:user, role: :recruiter)
+        admin = create(:user, role: :admin)
 
-      expect(job_seeker).to be_job_seeker
-      expect(recruiter).to be_recruiter
-      expect(admin).to be_admin
+        expect(job_seeker).to be_job_seeker
+        expect(recruiter).to be_recruiter
+        expect(admin).to be_admin
+      end
     end
   end
 end

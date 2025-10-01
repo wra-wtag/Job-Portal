@@ -2,53 +2,28 @@ class Application < ApplicationRecord
   belongs_to :job, counter_cache: :applications_count
   belongs_to :user
 
-  STATUSES = %w[applied viewed shortlisted rejected hired withdrawn].freeze
+  enum :status, { applied: 0, viewed: 1, shortlisted: 2, rejected: 3, hired: 4, withdrawn: 5 }
 
-  validates :status, inclusion: { in: STATUSES }
   validates :job_id, uniqueness: { scope: :user_id, message: "You have already applied for this job" }
 
   has_one_attached :resume
 
   scope :recent, -> { order(applied_at: :desc) }
   scope :by_status, ->(status) { where(status: status) }
-  scope :pending_review, -> { where(status: [ "applied", "viewed" ]) }
+  scope :pending_review, -> { where(status: [ :applied, :viewed ]) }
 
   before_create :set_applied_at
-
-  def applied?
-    status == "applied"
-  end
-
-  def viewed?
-    status == "viewed"
-  end
-
-  def shortlisted?
-    status == "shortlisted"
-  end
-
-  def rejected?
-    status == "rejected"
-  end
-
-  def hired?
-    status == "hired"
-  end
-
-  def withdrawn?
-    status == "withdrawn"
-  end
 
   def status_humanized
     status.humanize
   end
 
   def can_withdraw?
-    %w[applied viewed].include?(status)
+    [ :applied, :viewed ].include?(status.to_sym)
   end
 
   def withdraw!
-    update!(status: "withdrawn")
+    update!(status: :withdrawn)
   end
 
   def set_applied_at
