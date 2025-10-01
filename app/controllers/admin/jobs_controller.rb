@@ -6,11 +6,11 @@ class Admin::JobsController < Admin::ApplicationController
                 .order(created_at: :desc)
                 .page(params[:page])
 
-    @jobs = @jobs.where(status: params[:status]) if params[:status].present?
+    @jobs = @jobs.where(status: params[:status].to_sym) if params[:status].present?
 
-    @draft_count = Job.where(status: "draft").count
+    @draft_count = Job.draft.count
     @published_count = Job.published.count
-    @closed_count = Job.where(status: "closed").count
+    @closed_count = Job.closed.count
   end
 
   def show

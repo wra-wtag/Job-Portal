@@ -6,8 +6,8 @@ class Admin::CompaniesController < Admin::ApplicationController
                         .order(created_at: :desc)
                         .page(params[:page])
 
-    @companies = @companies.where(status: params[:status]) if params[:status].present?
-
+    @companies = @companies.where(status: params[:status].to_sym) if params[:status].present?
+    
     @pending_count = Company.pending.count
     @approved_count = Company.approved.count
     @rejected_count = Company.rejected.count
@@ -42,7 +42,7 @@ class Admin::CompaniesController < Admin::ApplicationController
       @company.recruiters.each do |recruiter|
         Notification.create!(
           user: recruiter,
-          kind: "company_approved",
+          kind: :company_approved,
           title: "Company Approved!",
           content: "Your company #{@company.name} has been approved and you can now start posting jobs."
         )
@@ -61,7 +61,7 @@ class Admin::CompaniesController < Admin::ApplicationController
       @company.recruiters.each do |recruiter|
         Notification.create!(
           user: recruiter,
-          kind: "company_rejected",
+          kind: :company_rejected,
           title: "Company Application Rejected",
           content: "Unfortunately, your company application for #{@company.name} has been rejected. Please contact support for more information."
         )
