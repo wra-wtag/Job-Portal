@@ -39,14 +39,14 @@ class Admin::CompaniesController < Admin::ApplicationController
     if @company.approve!(current_user)
       CompanyApprovalMailer.approved(@company).deliver_later
 
-      @company.recruiters.each do |recruiter|
-        Notification.create!(
-          user: recruiter,
-          kind: :company_approved,
-          title: "Company Approved!",
-          content: "Your company #{@company.name} has been approved and you can now start posting jobs."
-        )
-      end
+      # @company.recruiters.each do |recruiter|
+      #   Notification.create!(
+      #     user: recruiter,
+      #     kind: :company_approved,
+      #     title: "Company Approved!",
+      #     content: "Your company #{@company.name} has been approved and you can now start posting jobs."
+      #   )
+      # end
 
       redirect_to admin_company_path(@company), notice: "Company approved successfully!"
     else
@@ -58,14 +58,14 @@ class Admin::CompaniesController < Admin::ApplicationController
     if @company.reject!
       CompanyApprovalMailer.rejected(@company).deliver_later
 
-      @company.recruiters.each do |recruiter|
-        Notification.create!(
-          user: recruiter,
-          kind: :company_rejected,
-          title: "Company Application Rejected",
-          content: "Unfortunately, your company application for #{@company.name} has been rejected. Please contact support for more information."
-        )
-      end
+      # @company.recruiters.each do |recruiter|
+      #   Notification.create!(
+      #     user: recruiter,
+      #     kind: :company_rejected,
+      #     title: "Company Application Rejected",
+      #     content: "Unfortunately, your company application for #{@company.name} has been rejected. Please contact support for more information."
+      #   )
+      # end
 
       redirect_to admin_company_path(@company), notice: "Company rejected successfully!"
     else
