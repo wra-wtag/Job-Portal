@@ -18,7 +18,7 @@ class UsersController < ApplicationController
         if @user.update(user_params)
             if skills
             @user.skills = skills.map do |skill_name|
-                Skill.where('LOWER(name) = ?', skill_name.downcase).first_or_create(name: skill_name)
+                Skill.where("LOWER(name) = ?", skill_name.downcase).first_or_create(name: skill_name)
             end
             end
 
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
             :first_name, :last_name, :username, :bio, :location, :resume, notification_preferences: {}
         ]
 
-        permitted += [:password, :password_confirmation] if params[:user][:password].present?
+        permitted += [ :password, :password_confirmation ] if params[:user][:password].present?
 
         params.require(:user).permit(permitted)
     end
