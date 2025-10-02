@@ -33,11 +33,11 @@ class JobRecommendationJob < ApplicationJob
         applied_job_ids = user.applications.pluck(:job_id)
         jobs = jobs.where.not(id: applied_job_ids)
         rejected_company_ids = user.applications.joins(:job)
-                                .where(status: 'rejected')
+                                .where(status: "rejected")
                                 .includes(job: :company)
                                 .map { |app| app.job.company_id }
                                 .uniq
-        
+
         jobs = jobs.where.not(company_id: rejected_company_ids) if rejected_company_ids.any?
 
         scored_jobs = score_jobs_for_user(jobs, user)
@@ -65,13 +65,13 @@ class JobRecommendationJob < ApplicationJob
         end
 
         days_old = (Time.current - job.published_at) / 1.day
-        freshness_score = [20 - (days_old * 2), 0].max
+        freshness_score = [ 20 - (days_old * 2), 0 ].max
         score += freshness_score
 
         case job.company.size
-        when '51-200', '201-500'
+        when "51-200", "201-500"
             score += 10
-        when '11-50', '501-1000'
+        when "11-50", "501-1000"
             score += 5
         end
 
@@ -81,9 +81,9 @@ class JobRecommendationJob < ApplicationJob
             score += 5
         end
 
-        [job, score]
+        [ job, score ]
         end
-        
+
         jobs_with_scores.sort_by { |_, score| -score }.map { |job, _| job }
     end
 end
