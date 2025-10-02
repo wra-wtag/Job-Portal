@@ -12,10 +12,19 @@ class UsersController < ApplicationController
 
     def update
         authorize @user
+
+        skills = params[:user].delete(:skills_list)
+
         if @user.update(user_params)
-            redirect_to profile_path, notice: "Profile Added Successfully"
+            if skills
+            @user.skills = skills.map do |skill_name|
+                Skill.where('LOWER(name) = ?', skill_name.downcase).first_or_create(name: skill_name)
+            end
+            end
+
+            redirect_to profile_path, notice: "Profile Updated Successfully"
         else
-            render :edit
+            render :edit, status: :unprocessable_entity
         end
     end
 
@@ -31,9 +40,13 @@ class UsersController < ApplicationController
     end
 
     def user_params
-        params.require(:user).permit(
-            :first_name, :last_name, :username, :bio, :location, :resume, skills_list: [], notification_preferences: {}
-        )
+        permitted = [
+            :first_name, :last_name, :username, :bio, :location, :resume, notification_preferences: {}
+        ]
+
+        permitted += [:password, :password_confirmation] if params[:user][:password].present?
+
+        params.require(:user).permit(permitted)
     end
 
     def authorize_job_seeker!
