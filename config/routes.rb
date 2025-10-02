@@ -33,9 +33,6 @@ Rails.application.routes.draw do
   get "recruiter/pending", to: "recruiter_onboarding#pending", as: "recruiter_pending"
 
   namespace :recruiter do
-    get "companies/show"
-    get "companies/edit"
-    get "companies/update"
     get "dashboard", to: "dashboard#index"
 
     resources :jobs do
