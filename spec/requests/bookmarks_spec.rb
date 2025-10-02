@@ -4,7 +4,7 @@ RSpec.describe "Bookmarks", type: :request do
   let(:user) { create(:user, :job_seeker) }
   let(:job) { create(:job) }
   let!(:bookmark) { create(:bookmark, user: user, job: job) }
-  
+
   before do
     sign_in user, scope: :user
   end

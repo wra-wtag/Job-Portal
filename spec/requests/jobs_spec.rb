@@ -40,7 +40,7 @@ RSpec.describe "Jobs", type: :request do
 
   describe "DELETE /unbookmark" do
     before { post bookmark_job_path(job) }
-    
+
     it "removes the bookmark" do
       delete unbookmark_job_path(job)
       expect(response).to have_http_status(:redirect)
