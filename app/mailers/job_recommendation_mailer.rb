@@ -1,4 +1,4 @@
-class JobRecommendationJob < ApplicationMailer
+class JobRecommendationMailer < ApplicationMailer
     default from: "noreply@jobportal.com"
 
     def weekly_recommendations(user, jobs)

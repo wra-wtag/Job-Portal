@@ -19,15 +19,20 @@ class Admin::AnalyticsController < ApplicationController
                               .group_by_day(:created_at)
                               .group(:role)
                               .count
-    
+
     @job_postings = Job.where(created_at: start_date..end_date)
                        .group_by_day(:created_at)
                        .count
-    
+
     @applications_trend = Application.where(applied_at: start_date..end_date)
                                      .group_by_day(:applied_at)
                                      .count
-    
+
+    @top_jobs = Job.published
+                   .includes(:company)
+                   .order(applications_count: :desc, views_count: :desc)
+                   .limit(10)
+
     @application_status_distribution = Application.group(:status).count
 
     @industry_breakdown = Company.approved.group(:industry).count
