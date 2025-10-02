@@ -53,7 +53,7 @@ class Job < ApplicationRecord
   end
 
   def status_changed_to_published?
-    saved_change_to_status? && published?
+    will_save_change_to_status? && published?
   end
 
   def set_published_at
