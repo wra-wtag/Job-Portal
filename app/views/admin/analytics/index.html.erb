@@ -1,0 +1,242 @@
+<div class="px-4 py-6 sm:px-0">
+  <!-- Header -->
+  <div class="md:flex md:items-center md:justify-between mb-8">
+    <div class="flex-1 min-w-0">
+      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        Analytics Dashboard
+      </h1>
+      <p class="mt-1 text-sm text-gray-500">
+        Insights and metrics for the job portal platform
+      </p>
+    </div>
+    
+    <!-- Date Range Filter -->
+    <div class="mt-4 flex md:mt-0 md:ml-4">
+      <%= form_with url: admin_analytics_path, method: :get, local: true, class: "flex items-center space-x-4" do |f| %>
+        <%= f.select :date_range, 
+            [['Last 7 days', '7'], ['Last 30 days', '30'], ['Last 90 days', '90'], ['Last 365 days', '365']],
+            { selected: @date_range },
+            { class: "rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500",
+              onchange: "this.form.submit();" } %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Metrics Cards -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+    <!-- Total Users -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Total Users</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @metrics[:total_users] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <span class="text-green-600 font-medium">+<%= @metrics[:new_users] %></span>
+          <span class="text-gray-500"> new in period</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Jobs -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Active Jobs</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @metrics[:active_jobs] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <span class="text-gray-600">Total: <%= @metrics[:total_jobs] %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Applications -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Applications</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @metrics[:total_applications] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <span class="text-green-600 font-medium">+<%= @metrics[:new_applications] %></span>
+          <span class="text-gray-500"> new in period</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Companies -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Companies</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @metrics[:total_companies] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <% if @metrics[:pending_companies] > 0 %>
+            <span class="text-yellow-600 font-medium"><%= @metrics[:pending_companies] %></span>
+            <span class="text-gray-500"> pending approval</span>
+          <% else %>
+            <span class="text-green-600">All companies approved</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 mb-8">
+    <!-- User Registration Trends -->
+    <div class="bg-white shadow sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">User Registrations</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Daily user registration trends</p>
+      </div>
+      <div class="px-4 py-4">
+        <!-- Simple text-based chart for now -->
+        <div class="space-y-3">
+          <% @user_registrations.each do |(date, role), count| %>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-900">
+                <%= date.strftime('%m/%d') %> - <%= role.humanize %>
+              </span>
+              <div class="flex items-center">
+                <div class="w-24 bg-gray-200 rounded-full h-2 mr-3">
+                  <div class="bg-indigo-600 h-2 rounded-full" style="width: <%= [count.to_f / 10 * 100, 100].min %>%"></div>
+                </div>
+                <span class="text-sm text-gray-500"><%= count %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Status Distribution -->
+    <div class="bg-white shadow sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Application Status</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Distribution of application statuses</p>
+      </div>
+      <div class="px-4 py-4">
+        <div class="space-y-3">
+          <% @application_status_distribution.each do |status, count| %>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-900"><%= status.humanize %></span>
+              <div class="flex items-center">
+                <div class="w-24 bg-gray-200 rounded-full h-2 mr-3">
+                  <div class="h-2 rounded-full
+                              <%= case status
+                                  when 'applied' then 'bg-blue-600'
+                                  when 'viewed' then 'bg-yellow-600'
+                                  when 'shortlisted' then 'bg-green-600'
+                                  when 'rejected' then 'bg-red-600'
+                                  when 'hired' then 'bg-purple-600'
+                                  else 'bg-gray-600'
+                                  end %>" 
+                       style="width: <%= [count.to_f / @application_status_distribution.values.max * 100, 5].max %>%"></div>
+                </div>
+                <span class="text-sm text-gray-500"><%= count %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Performing Jobs -->
+  <div class="bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Top Performing Jobs</h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Jobs with the most applications and views</p>
+    </div>
+    <ul class="divide-y divide-gray-200">
+      <% @top_jobs.each do |job| %>
+        <li class="px-4 py-4">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <p class="text-sm font-medium text-indigo-600 truncate">
+                <%= link_to job.title, admin_job_path(job), class: "hover:underline" %>
+              </p>
+              <p class="text-sm text-gray-500">
+                <%= job.company.name %> • <%= job.location %>
+              </p>
+            </div>
+            <div class="flex items-center space-x-4 text-sm text-gray-500">
+              <span><%= pluralize(job.views_count, 'view') %></span>
+              <span><%= pluralize(job.applications_count, 'application') %></span>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <!-- Conversion Metrics -->
+  <div class="mt-8 bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Conversion Metrics</h3>
+    </div>
+    <div class="px-4 py-4">
+      <dl class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Jobs with Applications</dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= @conversion_metrics[:jobs_with_applications_rate] %>%</dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Application to Hire Rate</dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= @conversion_metrics[:application_to_hire_rate] %>%</dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Avg Applications per Job</dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= @conversion_metrics[:average_applications_per_job] %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
