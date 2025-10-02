@@ -185,6 +185,8 @@ GEM
     grape-swagger-rails (0.7.0)
       ostruct
       railties (>= 6.0.6.1)
+    groupdate (6.7.0)
+      activesupport (>= 7.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     image_processing (1.14.0)
@@ -543,6 +545,7 @@ DEPENDENCIES
   grape-entity
   grape-swagger
   grape-swagger-rails
+  groupdate
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
