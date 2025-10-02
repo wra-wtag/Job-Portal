@@ -12,7 +12,7 @@ RSpec.describe Notification, type: :model do
   end
 
   describe "enums" do
-    it { should define_enum_for(:kind).with_values(new_job_application: 0, application_update: 1, job_recommendation: 2, system_announcement: 3) }
+    it { should define_enum_for(:kind).with_values(new_job_application: 0, application_update: 1, job_recommendation: 2, system_announcement: 3, recruiter_approved: 4, recruiter_rejected: 5, admin_approved_recruiter: 6) }
   end
 
   describe "scopes" do
