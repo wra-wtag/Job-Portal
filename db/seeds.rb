@@ -60,10 +60,10 @@ puts 'Creating skills...'
 
 SKILLS = {
   'Programming Language' => %w[Ruby Python JavaScript TypeScript Java Go C++],
-  'Framework/Library' => ['Ruby on Rails', 'React', 'Node.js', 'Vue.js', 'Django', 'Spring Boot', 'Next.js'],
+  'Framework/Library' => [ 'Ruby on Rails', 'React', 'Node.js', 'Vue.js', 'Django', 'Spring Boot', 'Next.js' ],
   'Database' => %w[PostgreSQL MySQL MongoDB Redis Elasticsearch],
   'DevOps & Cloud' => %w[AWS Docker Kubernetes Terraform Jenkins Git CI/CD],
-  'Specialized' => ['Machine Learning', 'Data Science', 'Natural Language Processing', 'GraphQL', 'System Design']
+  'Specialized' => [ 'Machine Learning', 'Data Science', 'Natural Language Processing', 'GraphQL', 'System Design' ]
 }.freeze
 
 skills_map = {}
@@ -112,7 +112,7 @@ welldev = Company.find_or_create_by!(name: 'WellDev') do |c|
   c.size = '51-200'
 end
 
-[google, microsoft, samsung_rnd, welldev].each do |company|
+[ google, microsoft, samsung_rnd, welldev ].each do |company|
   company.approve!(admin) unless company.approved?
 end
 
@@ -159,7 +159,7 @@ job1 = Job.find_or_create_by!(title: 'Senior Frontend Engineer (React)', company
   job.currency = 'USD'
   job.application_deadline = 1.month.from_now
 end
-job1.skills = [skills_map['JavaScript'], skills_map['React'], skills_map['TypeScript'], skills_map['Next.js']]
+job1.skills = [ skills_map['JavaScript'], skills_map['React'], skills_map['TypeScript'], skills_map['Next.js'] ]
 
 job2 = Job.find_or_create_by!(title: 'Cloud DevOps Engineer', company: microsoft) do |job|
   job.posted_by_user = recruiter_microsoft
@@ -173,7 +173,7 @@ job2 = Job.find_or_create_by!(title: 'Cloud DevOps Engineer', company: microsoft
   job.currency = 'USD'
   job.application_deadline = 2.months.from_now
 end
-job2.skills = [skills_map['AWS'], skills_map['Docker'], skills_map['Kubernetes'], skills_map['Terraform'], skills_map['CI/CD']]
+job2.skills = [ skills_map['AWS'], skills_map['Docker'], skills_map['Kubernetes'], skills_map['Terraform'], skills_map['CI/CD'] ]
 
 job3 = Job.find_or_create_by!(title: 'Senior Software Engineer (Android)', company: samsung_rnd) do |job|
   job.posted_by_user = recruiter_samsung
@@ -187,7 +187,7 @@ job3 = Job.find_or_create_by!(title: 'Senior Software Engineer (Android)', compa
   job.currency = 'BDT'
   job.application_deadline = 3.weeks.from_now
 end
-job3.skills = [skills_map['Java'], skills_map['C++'], skills_map['Git']]
+job3.skills = [ skills_map['Java'], skills_map['C++'], skills_map['Git'] ]
 
 job4 = Job.find_or_create_by!(title: 'Backend Engineer (Ruby on Rails)', company: welldev) do |job|
   job.posted_by_user = recruiter_welldev
@@ -202,7 +202,7 @@ job4 = Job.find_or_create_by!(title: 'Backend Engineer (Ruby on Rails)', company
   job.is_remote = true
   job.application_deadline = 1.month.from_now
 end
-job4.skills = [skills_map['Ruby'], skills_map['Ruby on Rails'], skills_map['PostgreSQL'], skills_map['Redis']]
+job4.skills = [ skills_map['Ruby'], skills_map['Ruby on Rails'], skills_map['PostgreSQL'], skills_map['Redis'] ]
 
 job5 = Job.find_or_create_by!(title: 'Machine Learning Engineer', company: google) do |job|
   job.posted_by_user = recruiter_google
@@ -217,7 +217,7 @@ job5 = Job.find_or_create_by!(title: 'Machine Learning Engineer', company: googl
   job.currency = 'USD'
   job.application_deadline = 2.months.from_now
 end
-job5.skills = [skills_map['Python'], skills_map['Machine Learning'], skills_map['Data Science'], skills_map['AWS']]
+job5.skills = [ skills_map['Python'], skills_map['Machine Learning'], skills_map['Data Science'], skills_map['AWS'] ]
 
 puts "#{Job.count} jobs and #{JobSkill.count} job skills created."
 puts '----------------------------'
