@@ -1,4 +1,3 @@
-# spec/requests/admin/recruiter_requests_spec.rb
 require 'rails_helper'
 
 RSpec.describe "Admin::RecruiterRequests", type: :request do
@@ -11,7 +10,7 @@ RSpec.describe "Admin::RecruiterRequests", type: :request do
 
   describe "GET /index" do
     it "returns http success" do
-      get admin_companies_path  # or whatever the correct path is
+      get admin_companies_path
       expect(response).to have_http_status(:success)
     end
   end
