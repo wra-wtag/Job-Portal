@@ -7,7 +7,7 @@ class Admin::CompaniesController < Admin::ApplicationController
                         .page(params[:page])
 
     @companies = @companies.where(status: params[:status].to_sym) if params[:status].present?
-    
+
     @pending_count = Company.pending.count
     @approved_count = Company.approved.count
     @rejected_count = Company.rejected.count
