@@ -54,6 +54,10 @@ class User < ApplicationRecord
     recruiter_memberships.approved.managers.exists?(company: company)
   end
 
+  def has_any_recruiter_requests?
+    recruiter_memberships.pending.any? || companies.pending.any?
+  end
+
   private
 
   def assign_skills_from_list

@@ -6,11 +6,6 @@ class RecruiterOnboardingController < ApplicationController
 
   def index
     @has_pending = current_user.recruiter_memberships.pending.any? || current_user.companies.pending.any?
-
-    if @has_pending
-      redirect_to recruiter_pending_path
-      return
-    end
     @companies = Company.approved.order(:name)
   end
 
@@ -66,6 +61,12 @@ class RecruiterOnboardingController < ApplicationController
 
     if @approved_memberships.any? { |m| m.company.approved? }
       redirect_to recruiter_dashboard_path
+      return
+    end
+
+    if @pending_companies.empty? && @pending_memberships.empty?
+      redirect_to recruiter_onboarding_path
+      return
     end
   end
 
@@ -76,7 +77,7 @@ class RecruiterOnboardingController < ApplicationController
   end
 
   def check_if_already_approved!
-    if current_user.can_post_jobs?
+    if current_user.can_post_jobs? && !action_name.in?(['pending'])
       redirect_to recruiter_dashboard_path
     end
   end
