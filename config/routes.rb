@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: "users/registrations",
-    sessions: "users/sessions"
+    sessions: "users/sessions",
+    confirmations: "users/confirmations",
   }
   root "home#index"
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
