@@ -25,4 +25,14 @@ class RecruiterMembership < ApplicationRecord
   def reject!
     update!(status: :rejected)
   end
+
+  after_update :send_approval_email, if: :saved_change_to_status
+
+  private
+
+  def send_approval_email
+    if status_previously_changed? && approved?
+      RecruiterMailer.request_approved(self).deliver_later
+    end
+  end
 end
