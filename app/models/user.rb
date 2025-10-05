@@ -58,6 +58,10 @@ class User < ApplicationRecord
     recruiter_memberships.pending.any? || companies.pending.any?
   end
 
+  def needs_onboarding?
+    recruiter? && !has_company_request?
+  end
+
   private
 
   def assign_skills_from_list

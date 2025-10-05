@@ -77,7 +77,9 @@ class RecruiterOnboardingController < ApplicationController
   end
 
   def check_if_already_approved!
-    if current_user.can_post_jobs? && !action_name.in?(['pending'])
+    return if action_name == 'pending'
+    
+    if current_user.can_post_jobs?
       redirect_to recruiter_dashboard_path
     end
   end
