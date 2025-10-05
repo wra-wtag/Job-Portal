@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: "users/registrations",
     sessions: "users/sessions",
-    confirmations: "devise/confirmations",
+    confirmations: "devise/confirmations"
   }
   root "home#index"
 
@@ -89,6 +89,15 @@ Rails.application.routes.draw do
     end
   end
   get "company/pending", to: "companies#pending_approval", as: "company_pending_approval"
+
+  resources :notifications, only: [ :index, :show, :destroy ] do
+    collection do
+      post :mark_all_as_read
+    end
+    member do
+      post :mark_as_read
+    end
+  end
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check

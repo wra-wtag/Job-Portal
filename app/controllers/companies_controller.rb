@@ -2,7 +2,7 @@ class CompaniesController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_recruiter!, except: [ :pending_approval ]
   skip_before_action :authenticate_user!, only: [ :pending_approval ]
-  before_action :redirect_to_onboarding, only: [:pending_approval]
+  before_action :redirect_to_onboarding, only: [ :pending_approval ]
 
   def new
     @company = Company.new
