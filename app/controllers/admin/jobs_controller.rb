@@ -8,6 +8,17 @@ class Admin::JobsController < Admin::ApplicationController
 
     @jobs = @jobs.where(status: params[:status].to_sym) if params[:status].present?
 
+    if params[:search].present?
+      search_term = "%#{params[:search].strip}%"
+      @jobs = @jobs.where('jobs.title ILIKE :search OR
+                          jobs.description ILIKE :search OR
+                          jobs.location ILIKE :search OR
+                          companies.name ILIKE :search OR
+                          users.email ILIKE :search',
+                          search: search_term)
+                  .joins(:company, :posted_by_user)
+    end
+
     @draft_count = Job.draft.count
     @published_count = Job.published.count
     @closed_count = Job.closed.count

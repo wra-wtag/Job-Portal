@@ -1,0 +1,222 @@
+<div class="px-4 py-6 sm:px-0">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Jobs Management</h1>
+      <p class="mt-1 text-sm text-gray-500">Monitor and manage all job postings</p>
+    </div>
+    
+    <%= form_with url: admin_jobs_path, method: :get, local: true, class: "flex items-center space-x-3" do |f| %>
+      <%= f.text_field :search, 
+          value: params[:search],
+          placeholder: "Search jobs...", 
+          class: "px-3 py-2 border border-gray-300 rounded-md text-sm" %>
+      <%= f.submit "Search", class: "px-4 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700" %>
+    <% end %>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+    <%= link_to admin_jobs_path, class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow <%= 'ring-2 ring-indigo-500' if params[:status].blank? %>">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <dt class="text-xs font-medium text-gray-500">Total Jobs</dt>
+              <dd class="text-xl font-semibold text-gray-900"><%= Job.count %></dd>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to admin_jobs_path(status: 'published'), class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow <%= 'ring-2 ring-green-500' if params[:status] == 'published' %>">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <dt class="text-xs font-medium text-gray-500">Published</dt>
+              <dd class="text-xl font-semibold text-gray-900"><%= @published_count %></dd>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to admin_jobs_path(status: 'draft'), class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow <%= 'ring-2 ring-yellow-500' if params[:status] == 'draft' %>">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <dt class="text-xs font-medium text-gray-500">Drafts</dt>
+              <dd class="text-xl font-semibold text-gray-900"><%= @draft_count %></dd>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to admin_jobs_path(status: 'closed'), class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow <%= 'ring-2 ring-red-500' if params[:status] == 'closed' %>">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <dt class="text-xs font-medium text-gray-500">Closed</dt>
+              <dd class="text-xl font-semibold text-gray-900"><%= @closed_count %></dd>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <dt class="text-xs font-medium text-gray-500">Applications</dt>
+            <dd class="text-xl font-semibold text-gray-900"><%= Application.count %></dd>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Jobs Table -->
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <% if @jobs.any? %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job Details</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metrics</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Posted</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @jobs.each do |job| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4">
+                <div class="text-sm">
+                  <div class="font-medium text-gray-900">
+                    <%= link_to job.title, admin_job_path(job), class: "hover:text-indigo-600" %>
+                  </div>
+                  <div class="text-gray-500">
+                    <%= job.location %>
+                    <% if job.is_remote %>
+                      <span class="ml-1 text-green-600">• Remote</span>
+                    <% end %>
+                  </div>
+                  <div class="text-gray-400 text-xs mt-1">
+                    <%= job.employment_type.humanize %>
+                    <% if job.salary_range %>
+                      • <%= job.salary_range %>
+                    <% end %>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900"><%= job.company.name %></div>
+                <div class="text-xs text-gray-500"><%= job.posted_by_user.full_name %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      <%= case job.status
+                          when 'draft' then 'bg-gray-100 text-gray-800'
+                          when 'published' then 'bg-green-100 text-green-800'
+                          when 'closed' then 'bg-red-100 text-red-800'
+                          end %>">
+                  <%= job.status.humanize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex flex-col space-y-1">
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                      <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <%= job.views_count %>
+                  </div>
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                      <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                    </svg>
+                    <%= job.applications_count %>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= job.created_at.strftime('%b %d, %Y') %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex items-center justify-end space-x-3">
+                  <%= link_to admin_job_path(job), class: "text-indigo-600 hover:text-indigo-900" do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  <% end %>
+                  <%= link_to admin_job_path(job), 
+                      data: { turbo_method: :delete, turbo_confirm: "Delete this job?" },
+                      class: "text-red-600 hover:text-red-900" do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      
+      <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
+        <%= paginate @jobs if respond_to?(:paginate) %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
+        <p class="mt-1 text-sm text-gray-500">
+          <% if params[:search].present? %>
+            No jobs match your search
+          <% elsif params[:status].present? %>
+            No <%= params[:status] %> jobs
+          <% else %>
+            No jobs in the system yet
+          <% end %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>
