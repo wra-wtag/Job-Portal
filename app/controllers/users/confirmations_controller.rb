@@ -16,7 +16,17 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   #   super
   # end
 
-  # protected
+  protected
+
+  def after_confirmation_path_for(resource_name, resource)
+    if resource.job_seeker?
+      jobs_path
+    elsif resource.recruiter?
+      recruiter_onboarding_path
+    else
+      root_path
+    end
+  end
 
   # The path used after resending confirmation instructions.
   # def after_resending_confirmation_instructions_path_for(resource_name)
