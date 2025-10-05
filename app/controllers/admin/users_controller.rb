@@ -6,11 +6,17 @@ class Admin::UsersController < Admin::ApplicationController
                  .order(created_at: :desc)
                  .page(params[:page])
 
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @users = @users.where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ? OR username ILIKE ?",
+                            search_term, search_term, search_term, search_term)
+    end
+
     @users = @users.where(role: params[:role].to_sym) if params[:role].present?
 
-    @job_seekers_count = User.job_seekers.count
-    @recruiters_count = User.recruiters.count
-    @admins_count = User.admins.count
+    @job_seekers_count = User.job_seeker.count
+    @recruiters_count = User.recruiter.count
+    @admins_count = User.admin.count
   end
 
   def show
