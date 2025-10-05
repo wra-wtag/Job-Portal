@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: "users/registrations",
-    sessions: "users/sessions"
+    sessions: "users/sessions",
+    confirmations: "devise/confirmations",
   }
   root "home#index"
 
@@ -27,10 +28,10 @@ Rails.application.routes.draw do
 
   resources :bookmarks, only: [ :index, :destroy ]
 
-  get "recruiter/onboarding", to: "recruiter_onboarding#index"
+  get "recruiter/pending", to: "recruiter_onboarding#pending", as: "recruiter_pending"
+  get "recruiter/onboarding", to: "recruiter_onboarding#index", as: "recruiter_onboarding"
   get "recruiter/onboarding/join_company", to: "recruiter_onboarding#join_company", as: "join_company_recruiter_onboarding"
   post "recruiter/onboarding/submit_request", to: "recruiter_onboarding#submit_request"
-  get "recruiter/pending", to: "recruiter_onboarding#pending", as: "recruiter_pending"
 
   namespace :recruiter do
     get "dashboard", to: "dashboard#index"
