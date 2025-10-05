@@ -66,7 +66,7 @@ class RecruiterOnboardingController < ApplicationController
 
     if @pending_companies.empty? && @pending_memberships.empty?
       redirect_to recruiter_onboarding_path
-      return
+      nil
     end
   end
 
@@ -77,8 +77,8 @@ class RecruiterOnboardingController < ApplicationController
   end
 
   def check_if_already_approved!
-    return if action_name == 'pending'
-    
+    return if action_name == "pending"
+
     if current_user.can_post_jobs?
       redirect_to recruiter_dashboard_path
     end
