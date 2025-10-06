@@ -56,9 +56,9 @@ class NotificationsController < ApplicationController
       recruiter_applications_path
     when "application_update"
       applications_path
-    when "job_recommendations"
+    when "job_recommendation"
       jobs_path
-    when "company_approved"
+    when "recruiter_approved"
       recruiter_dashboard_path
     else
       root_path
