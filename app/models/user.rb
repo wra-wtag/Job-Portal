@@ -62,6 +62,13 @@ class User < ApplicationRecord
     recruiter? && !has_company_request?
   end
 
+  before_create :generate_authentication_token
+
+  def regenerate_authentication_token
+    generate_authentication_token
+    save
+  end
+
   private
 
   def assign_skills_from_list
@@ -78,5 +85,12 @@ class User < ApplicationRecord
 
   def generate_username
     self.username = "#{first_name.downcase}#{last_name.downcase}#{rand(1000)}" if username.blank?
+  end
+
+  def generate_authentication_token
+    loop do
+      self.authentication_token = SecureRandom.hex(20)
+      break unless User.exists?(authentication_token: authentication_token)
+    end
   end
 end
