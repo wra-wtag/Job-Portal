@@ -3,7 +3,7 @@ class WeeklyRecommendationsJob < ApplicationJob
 
   def perform
     # Run every Sunday at 9 AM
-    User.job_seekers
+    User.job_seeker
         .where(weekly_recommendations_enabled: true)
         .where(email_verified: true)
         .find_each(batch_size: 100) do |user|
