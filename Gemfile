@@ -69,6 +69,12 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+gem "devise"
+gem "pundit"
+gem "sidekiq"
+gem "sidekiq-cron"
+gem "redis"
+gem "grape"
 gem "tailwindcss-rails"
 gem "kaminari"
 gem "dotenv-rails"
