@@ -1,87 +1,79 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Job Portal</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <head>
+    <title>Job Portal</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  <%= javascript_importmap_tags %>
-</head>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
 
-<body class="bg-slate-50"> <div x-data="{ show: false, message: '', type: '' }"
-       @flash.window="show = true; message = $event.detail.message; type = $event.detail.type; setTimeout(() => show = false, 5000)"
-       x-show="show"
-       x-transition:enter="transform ease-out duration-300 transition"
-       x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-       x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
-       x-transition:leave="transition ease-in duration-100"
-       x-transition:leave-start="opacity-100"
-       x-transition:leave-end="opacity-0"
-       class="fixed top-5 right-5 w-full max-w-sm z-50">
-    <div :class="{ 'bg-green-100 border-green-400 text-green-700': type === 'notice', 'bg-red-100 border-red-400 text-red-700': type === 'alert' }" class="border px-4 py-3 rounded-lg shadow-lg">
-      <p x-text="message"></p>
-    </div>
-  </div>
-
-  <% if notice || alert %>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        window.dispatchEvent(new CustomEvent('flash', {
-          detail: {
-            type: '<%= notice ? "notice" : "alert" %>',
-            message: '<%= notice || alert %>'
-          }
-        }));
-      });
-    </script>
-  <% end %>
-
-
-  <% unless recruiter_onboarding_page? %>
-    <header class="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
-      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex items-center">
-            <div class="flex-shrink-0">
-              <%= link_to "Job Portal", root_path, class: "text-2xl font-bold text-indigo-600" %>
+  <body>
+    <!-- Navigation -->
+    <% unless recruiter_onboarding_page? %>
+      <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between h-16">
+            <div class="flex">
+              <div class="flex-shrink-0 flex items-center">
+                <%= link_to "Job Portal", root_path, class: "text-xl font-bold text-indigo-600" %>
+              </div>
+              
+              <% if user_signed_in? %>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                  <!-- Show only for job seekers -->
+                  <% if current_user.job_seeker? %>
+                    <%= link_to "Browse Jobs", jobs_path, 
+                        class: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+                    
+                    <%= link_to "My Applications", applications_path, 
+                        class: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+                    
+                    <%= link_to "Bookmarks", bookmarks_path, 
+                        class: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+                  <% end %>
+                </div>
+              <% end %>
             </div>
-            <% if user_signed_in? && current_user.job_seeker? %>
-              <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-                <%= link_to "Browse Jobs", jobs_path, class: "border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition" %>
-                <%= link_to "My Applications", applications_path, class: "border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition" %>
-                <%= link_to "Bookmarks", bookmarks_path, class: "border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition" %>
-              </div>
-            <% end %>
-          </div>
 
-          <div class="hidden sm:ml-6 sm:flex sm:items-center">
-            <% if user_signed_in? %>
-              <div class="flex items-center space-x-4">
-                <%= render 'shared/notification_badge' %>
-                
-                <span class="text-sm text-gray-700">Hello, <%= current_user.first_name %></span>
-                <span class="text-gray-300">|</span>
-                <%= link_to "Profile", profile_path, class: "text-sm font-medium text-gray-500 hover:text-indigo-600 transition" %>
-                <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "text-sm font-medium text-gray-500 hover:text-indigo-600 transition" %>
-              </div>
-            <% else %>
-                <%= link_to "Sign In", new_user_session_path, class: "text-sm font-medium text-gray-500 hover:text-gray-900" %>
-                <%= link_to "Sign Up", new_user_registration_path, class: "ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition" %>
-            <% end %>
+            <div class="hidden sm:ml-6 sm:flex sm:items-center">
+              <% if user_signed_in? %>
+                <div class="ml-3 relative">
+                  <span class="text-gray-700 text-sm mr-4">Hello, <%= current_user.first_name %></span>
+                  <%= link_to "Profile", profile_path, class: "text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium" %>
+                  <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
+                      class: "text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium" %>
+                </div>
+              <% else %>
+                <%= link_to "Sign In", new_user_session_path, class: "text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium" %>
+                <%= link_to "Sign Up", new_user_registration_path, class: "ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+              <% end %>
+            </div>
           </div>
         </div>
       </nav>
-    </header>
-  <% end %>
-  
-  <main>
-    <%= yield %>
-  </main>
+    <% end %>
 
-</body>
+    <!-- Flash Messages -->
+    <% if notice %>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <%= notice %>
+      </div>
+    <% end %>
+    
+    <% if alert %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <%= alert %>
+      </div>
+    <% end %>
+    
+    <main class="<%= recruiter_onboarding_page? ? '' : 'container mx-auto px-4' %>">
+      <%= yield %>
+    </main>
+  </body>
 </html>
