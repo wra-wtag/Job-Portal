@@ -17,15 +17,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
     ])
   end
 
-  def after_sign_up_path_for(resource)
-    if resource.job_seeker?
-      profile_setup_path
-    elsif resource.recruiter?
-      recruiter_onboarding_path
-    else
-      root_path
-    end
-  end
+  # def after_sign_up_path_for(resource)
+  #   if resource.job_seeker?
+  #     profile_setup_path
+  #   elsif resource.recruiter?
+  #     recruiter_onboarding_path
+  #   else
+  #     root_path
+  #   end
+  # end
 
   def after_update_path_for(resource)
     if resource.recruiter? && resource.companies.empty?

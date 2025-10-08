@@ -1,0 +1,107 @@
+<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-6">
+  <h1 class="text-2xl font-bold text-gray-800">Edit Profile</h1>
+
+  <%= form_with(model: @user, url: profile_path, method: :patch, local: true, html: { multipart: true }) do |f| %>
+
+    <% if @user.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <h2 class="font-semibold mb-2">Please fix the following errors:</h2>
+        <ul class="list-disc pl-5">
+          <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Personal Info -->
+    <div class="p-4 bg-gray-50 rounded-lg space-y-4">
+      <h2 class="font-semibold text-gray-700">Personal Info</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :first_name, class: "block font-medium text-gray-700" %>
+          <%= f.text_field :first_name, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+
+        <div>
+          <%= f.label :last_name, class: "block font-medium text-gray-700" %>
+          <%= f.text_field :last_name, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :username, class: "block font-medium text-gray-700" %>
+        <%= f.text_field :username, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+      </div>
+
+      <div>
+        <%= f.label :bio, class: "block font-medium text-gray-700" %>
+        <%= f.text_area :bio, rows: 4, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+      </div>
+
+      <div>
+        <%= f.label :location, class: "block font-medium text-gray-700" %>
+        <%= f.text_field :location, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+      </div>
+    </div>
+    <!-- Skills -->
+<div data-controller="tags" class="mb-4">
+  <label class="block font-medium text-gray-700">Skills</label>
+  
+  <!-- Existing Skills -->
+  <div class="mt-1 flex flex-wrap gap-2" data-tags-target="tagsContainer">
+    <% @user.skills.each do |skill| %>
+      <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full flex items-center gap-2">
+        <%= skill.name %>
+        <button type="button" data-action="tags#removeTag" class="text-indigo-700 font-bold">×</button>
+        <input type="hidden" name="user[skills_list][]" value="<%= skill.name %>">
+      </span>
+    <% end %>
+  </div>
+
+  <!-- Input field -->
+  <input type="text"
+         placeholder="Type a skill and press Enter"
+         data-action="keydown.enter->tags#addTag"
+         data-tags-target="input"
+         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+</div>
+
+
+    <!-- Resume -->
+    <div class="p-4 bg-gray-50 rounded-lg space-y-2">
+      <h2 class="font-semibold text-gray-700">Resume</h2>
+      <%= f.file_field :resume, class: "mt-1 block w-full text-gray-700" %>
+      <% if @user.resume.attached? %>
+        <div class="text-sm">
+          Current resume:
+          <%= link_to "View", rails_blob_path(@user.resume, disposition: "inline"), target: "_blank", class: "text-indigo-600 hover:underline" %> |
+          <%= link_to "Download", rails_blob_path(@user.resume, disposition: "attachment"), class: "text-indigo-600 hover:underline" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Password -->
+    <div class="p-4 bg-gray-50 rounded-lg space-y-2">
+      <h2 class="font-semibold text-gray-700">Change Password</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :password, "New Password", class: "block font-medium text-gray-700" %>
+          <%= f.password_field :password, autocomplete: "new-password", placeholder: "Leave blank to keep current", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, "Confirm Password", class: "block font-medium text-gray-700" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Leave blank to keep current", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="flex justify-end">
+      <%= f.submit "Save & Continue", class: "px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition" %>
+    </div>
+
+  <% end %>
+</div>

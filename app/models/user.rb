@@ -56,6 +56,18 @@ class User < ApplicationRecord
 
   private
 
+  def assign_skills_from_list
+    return unless skills_list.present?
+
+    skill_names = Array(skills_list).map(&:strip).reject(&:blank?)
+
+    new_skills = skill_names.map do |name|
+      Skill.where("LOWER(name) = ?", name.downcase).first_or_create(name: name)
+    end
+
+    self.skills = new_skills
+  end
+
   def generate_username
     self.username = "#{first_name.downcase}#{last_name.downcase}#{rand(1000)}" if username.blank?
   end

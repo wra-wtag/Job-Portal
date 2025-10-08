@@ -1,0 +1,85 @@
+<div class="max-w-3xl mx-auto py-8">
+  <div class="bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <!-- Job Info Header -->
+      <div class="border-b border-gray-200 pb-6 mb-6">
+        <div class="flex items-center">
+          <% if @job.company.logo.attached? %>
+            <%= image_tag @job.company.logo, class: "h-12 w-12 rounded-lg object-cover mr-4" %>
+          <% else %>
+            <div class="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center mr-4">
+              <span class="text-sm font-medium text-gray-600"><%= @job.company.name.first.upcase %></span>
+            </div>
+          <% end %>
+          
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Apply for <%= @job.title %></h1>
+            <p class="text-gray-600">
+              <%= @job.company.name %> • <%= @job.location %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <%= form_with model: @application, url: submit_application_job_path(@job), local: true, multipart: true, class: "space-y-6" do |f| %>
+        <% if @application.errors.any? %>
+          <div class="bg-red-50 border border-red-200 rounded-md p-4">
+            <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+            <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+              <% @application.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Resume Upload -->
+        <div>
+          <%= f.label :resume, "Resume", class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.file_field :resume, accept: ".pdf,.doc,.docx", required: true,
+                class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none" %>
+            <p class="mt-1 text-sm text-gray-500">
+              Upload your resume (PDF, DOC, DOCX - Max 5MB)
+            </p>
+            
+            <% if current_user.resume.attached? %>
+              <div class="mt-2 p-3 bg-blue-50 rounded-md">
+                <p class="text-sm text-blue-800">
+                  <strong>Current resume on file:</strong> 
+                  <%= current_user.resume.filename %>
+                  <br>
+                  <small>You can upload a different resume for this application or leave blank to use your current one.</small>
+                </p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Cover Letter -->
+        <div>
+          <%= f.label :cover_letter, "Cover Letter", class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.text_area :cover_letter, rows: 8, required: true,
+                placeholder: "Tell the employer why you're interested in this position and how your experience makes you a great fit...",
+                class: "block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+          </div>
+          <p class="mt-1 text-sm text-gray-500">
+            Write a compelling cover letter explaining why you're the right fit for this role.
+          </p>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+          <%= link_to job_path(@job), 
+              class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" do %>
+            Cancel
+          <% end %>
+          
+          <%= f.submit "Submit Application", 
+              class: "px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

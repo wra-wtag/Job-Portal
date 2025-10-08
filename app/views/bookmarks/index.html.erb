@@ -1,0 +1,62 @@
+<div class="max-w-7xl mx-auto py-12 px-4">
+  <h1 class="text-3xl font-bold text-gray-900 mb-6">Your Bookmarked Jobs</h1>
+
+  <% if @bookmarks.any? %>
+    <div class="grid gap-6">
+      <% @bookmarks.each do |bookmark| %>
+        <% job = bookmark.job %>
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition">
+          <div class="p-6 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+            <!-- Left: Job Info -->
+            <div class="flex-1">
+              <h2 class="text-xl font-semibold text-indigo-600 hover:underline">
+                <%= link_to job.title, job_path(job) %>
+              </h2>
+              <p class="text-gray-600 text-sm mt-1">
+                <%= job.company.name %> • <%= job.location %>
+                <% if job.is_remote %>• <span class="text-green-600">Remote</span><% end %>
+              </p>
+              <% if job.salary_range.present? %>
+                <p class="text-gray-600 text-sm mt-1"><strong>Salary:</strong> <%= job.salary_range %></p>
+              <% end %>
+              <p class="text-gray-500 text-xs mt-1">Status: <%= job.status.humanize %></p>
+
+              <div class="mt-2 flex flex-wrap gap-2">
+                <% job.skills.limit(4).each do |skill| %>
+                  <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full text-xs font-medium">
+                    <%= skill.name %>
+                  </span>
+                <% end %>
+                <% if job.skills.count > 4 %>
+                  <span class="text-xs text-gray-500">+<%= job.skills.count - 4 %> more</span>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Right: Actions -->
+            <div class="flex flex-col items-end space-y-2">
+              <%= link_to "View Details", job_path(job),
+                  class: "px-3 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700" %>
+
+              <%= button_to bookmark_path(bookmark), method: :delete,
+                  class: "px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600",
+                  data: { confirm: "Remove this job from bookmarks?" } do %>
+                Remove
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-8">
+      <%= paginate @bookmarks %>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <p class="text-gray-600 text-lg">You have no bookmarked jobs yet.</p>
+      <%= link_to "Browse Jobs", jobs_path,
+          class: "mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl shadow-lg transition" %>
+    </div>
+  <% end %>
+</div>
