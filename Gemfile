@@ -40,6 +40,13 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+gem "email_validator"
+gem "groupdate"
+gem "kaminari"
+gem "mini_magick"
+gem "phony_rails"
+gem "tailwindcss-rails"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -54,6 +61,8 @@ group :development, :test do
   gem "faker"
   gem "shoulda-matchers"
   gem "database_cleaner-active_record"
+  gem "dotenv-rails"
+  gem "rubocop", "~> 1.80", require: false
 end
 
 group :development do
@@ -69,11 +78,3 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-gem "tailwindcss-rails"
-gem "kaminari"
-gem "dotenv-rails"
-gem "email_validator"
-gem "phony_rails"
-gem "mini_magick"
-gem "rubocop", "~> 1.80", require: false
-gem "groupdate"
