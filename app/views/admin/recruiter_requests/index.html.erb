@@ -1,0 +1,118 @@
+<div class="px-4 py-6 sm:px-0">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Recruiter Requests</h1>
+    <p class="mt-2 text-gray-600">Manage all recruiter membership requests</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Pending</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @stats[:total_pending] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Approved</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @stats[:total_approved] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Rejected</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @stats[:total_rejected] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Requests List -->
+  <div class="bg-white shadow overflow-hidden sm:rounded-md">
+    <% if @requests.any? %>
+      <ul class="divide-y divide-gray-200">
+        <% @requests.each do |request| %>
+          <li>
+            <div class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center flex-1">
+                  <div class="flex-shrink-0 h-12 w-12">
+                    <div class="h-12 w-12 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span class="text-sm font-medium text-gray-700">
+                        <%= request.user.first_name.first %><%= request.user.last_name.first %>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ml-4 flex-1">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h3 class="text-sm font-medium text-gray-900">
+                          <%= link_to request.user.full_name, admin_recruiter_request_path(request), 
+                              class: "hover:text-indigo-600" %>
+                        </h3>
+                        <p class="text-sm text-gray-500">
+                          Wants to join <%= request.company.name %> as <%= request.role.humanize %>
+                        </p>
+                        <p class="text-xs text-gray-400">
+                          Requested <%= time_ago_in_words(request.created_at) %> ago
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="ml-6 flex items-center space-x-4">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                               <%= case request.status
+                                   when 'pending' then 'bg-yellow-100 text-yellow-800'
+                                   when 'approved' then 'bg-green-100 text-green-800'
+                                   when 'rejected' then 'bg-red-100 text-red-800'
+                                   end %>">
+                    <%= request.status.humanize %>
+                  </span>
+                  
+                  <%= link_to "View Details", admin_recruiter_request_path(request),
+                      class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+                </div>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      
+      <div class="px-4 py-3 bg-gray-50">
+        <%= paginate @requests if respond_to?(:paginate) %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No recruiter requests</h3>
+        <p class="mt-1 text-sm text-gray-500">
+          There are no recruiter requests at the moment.
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,292 @@
+<div class="px-4 py-6 sm:px-0">
+  <!-- Breadcrumb -->
+  <div class="mb-6">
+    <%= link_to admin_recruiter_requests_path, class: "text-indigo-600 hover:text-indigo-900" do %>
+      ← Back to Recruiter Requests
+    <% end %>
+  </div>
+
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="md:flex md:items-center md:justify-between">
+      <div class="flex-1 min-w-0">
+        <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+          Recruiter Request Details
+        </h1>
+        <p class="mt-1 text-sm text-gray-500">
+          Review and manage this recruiter request
+        </p>
+      </div>
+      <div class="mt-4 flex md:mt-0 md:ml-4">
+        <% if @request.pending? %>
+          <div class="flex space-x-3">
+            <%= button_to approve_admin_recruiter_request_path(@request), method: :patch,
+                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
+                confirm: "Are you sure you want to approve this recruiter request?" do %>
+              <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              Approve Request
+            <% end %>
+            
+            <%= button_to reject_admin_recruiter_request_path(@request), method: :patch,
+                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500",
+                confirm: "Are you sure you want to reject this recruiter request?" do %>
+              <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              Reject Request
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Details -->
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Request Information</h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Details about this recruiter request</p>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <!-- Request Status -->
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Status</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                         <%= case @request.status
+                             when 'pending' then 'bg-yellow-100 text-yellow-800'
+                             when 'approved' then 'bg-green-100 text-green-800'
+                             when 'rejected' then 'bg-red-100 text-red-800'
+                             end %>">
+              <%= @request.status.humanize %>
+            </span>
+          </dd>
+        </div>
+
+        <!-- Applicant Information -->
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Applicant</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center">
+                <span class="text-sm font-medium text-gray-700">
+                  <%= @request.user.first_name.first %><%= @request.user.last_name.first %>
+                </span>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">
+                  <%= link_to @request.user.full_name, admin_user_path(@request.user), 
+                      class: "text-indigo-600 hover:text-indigo-900" %>
+                </div>
+                <div class="text-sm text-gray-500"><%= @request.user.email %></div>
+              </div>
+            </div>
+          </dd>
+        </div>
+
+        <!-- Company Information -->
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Target Company</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <div class="flex items-center">
+              <% if @request.company.logo.attached? %>
+                <%= image_tag @request.company.logo, class: "h-10 w-10 rounded-lg object-cover mr-3" %>
+              <% else %>
+                <div class="h-10 w-10 bg-gray-200 rounded-lg flex items-center justify-center mr-3">
+                  <span class="text-sm font-medium text-gray-600"><%= @request.company.name.first.upcase %></span>
+                </div>
+              <% end %>
+              <div>
+                <div class="text-sm font-medium text-gray-900">
+                  <%= link_to @request.company.name, admin_company_path(@request.company), 
+                      class: "text-indigo-600 hover:text-indigo-900" %>
+                </div>
+                <div class="text-sm text-gray-500">
+                  <%= @request.company.location %> • <%= @request.company.industry %>
+                </div>
+              </div>
+            </div>
+          </dd>
+        </div>
+
+        <!-- Requested Role -->
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Requested Role</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                         <%= @request.role == 'manager' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' %>">
+              <%= @request.role.humanize %>
+            </span>
+          </dd>
+        </div>
+
+        <!-- Position Title -->
+        <% if @request.title.present? %>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Position Title</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= @request.title %>
+            </dd>
+          </div>
+        <% end %>
+
+        <!-- Application Message -->
+        <% if @request.contact_info['message'].present? %>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Application Message</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <div class="prose max-w-none">
+                <%= simple_format(@request.contact_info['message']) %>
+              </div>
+            </dd>
+          </div>
+        <% end %>
+
+        <!-- Experience -->
+        <% if @request.contact_info['experience'].present? %>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Experience</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= @request.contact_info['experience'] %>
+            </dd>
+          </div>
+        <% end %>
+
+        <!-- Request Date -->
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Requested Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= @request.created_at.strftime('%B %d, %Y at %I:%M %p') %>
+            <span class="text-gray-500">(<%= time_ago_in_words(@request.created_at) %> ago)</span>
+          </dd>
+        </div>
+
+        <!-- Last Updated -->
+        <% if @request.updated_at != @request.created_at %>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= @request.updated_at.strftime('%B %d, %Y at %I:%M %p') %>
+              <span class="text-gray-500">(<%= time_ago_in_words(@request.updated_at) %> ago)</span>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Company Managers -->
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Company Managers</h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">
+        Current managers of <%= @request.company.name %> who can also approve this request
+      </p>
+    </div>
+    <% if @company_managers.any? %>
+      <ul class="divide-y divide-gray-200">
+        <% @company_managers.each do |manager_membership| %>
+          <li class="px-4 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center">
+                  <span class="text-sm font-medium text-gray-700">
+                    <%= manager_membership.user.first_name.first %><%= manager_membership.user.last_name.first %>
+                  </span>
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">
+                    <%= link_to manager_membership.user.full_name, admin_user_path(manager_membership.user), 
+                        class: "text-indigo-600 hover:text-indigo-900" %>
+                  </div>
+                  <div class="text-sm text-gray-500">
+                    <%= manager_membership.user.email %>
+                    <% if manager_membership.is_primary %>
+                      • <span class="text-purple-600 font-medium">Primary Manager</span>
+                    <% end %>
+                  </div>
+                  <div class="text-xs text-gray-400">
+                    <%= manager_membership.title %> • 
+                    Joined <%= manager_membership.created_at.strftime('%B %Y') %>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  Manager
+                </span>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="px-4 py-4 text-center text-gray-500">
+        No managers found for this company
+      </div>
+    <% end %>
+  </div>
+
+  <!-- User Profile Summary -->
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Applicant Profile</h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Summary of the user's profile information</p>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">User Role</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+              <%= @request.user.role.humanize %>
+            </span>
+          </dd>
+        </div>
+        
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Location</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= @request.user.location.present? ? @request.user.location : 'Not specified' %>
+          </dd>
+        </div>
+        
+        <% if @request.user.bio.present? %>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Bio</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= simple_format(@request.user.bio) %>
+            </dd>
+          </div>
+        <% end %>
+
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Member Since</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= @request.user.created_at.strftime('%B %d, %Y') %>
+            <span class="text-gray-500">(<%= time_ago_in_words(@request.user.created_at) %> ago)</span>
+          </dd>
+        </div>
+
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Email Verified</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <% if @request.user.confirmed_at.present? %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                Verified
+              </span>
+              <span class="text-gray-500 ml-2">on <%= @request.user.confirmed_at.strftime('%B %d, %Y') %></span>
+            <% else %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                Not Verified
+              </span>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,58 @@ Rails.application.routes.draw do
     confirmations: "users/confirmations"
   }
   root "home#index"
+
+  get "profile", to: "users#show"
+  get "profile/edit", to: "users#edit"
+  patch "profile", to: "users#update"
+  get "profile/setup", to: "users#setup"
+
+  resources :jobs, only: [ :index, :show ] do
+    member do
+      post :bookmark
+      delete :unbookmark
+      get :apply
+      post :submit_application
+    end
+  end
+
+  resources :applications, only: [ :index, :show ] do
+    member do
+      patch :withdraw
+    end
+  end
+
+  resources :bookmarks, only: [ :index, :destroy ]
+
+  namespace :recruiter do
+    get "dashboard", to: "dashboard#index"
+    resources :companies, except: [ :index ] do
+      resources :jobs do
+        resources :applications, only: [ :index, :show, :update ]
+      end
+    end
+  end
+
+  namespace :admin do
+    resources :recruiter_requests, only: [ :index, :show ] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+
+    get "dashboard", to: "dashboard#index"
+    resources :users
+    resources :companies do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+    resources :jobs
+  end
+
+  get "company/pending", to: "companies#pending_approval", as: "company_pending_approval"
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check

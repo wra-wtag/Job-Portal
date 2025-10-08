@@ -1,0 +1,99 @@
+<div class="px-4 py-6 sm:px-0">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Companies</h1>
+    
+    <div class="flex space-x-3">
+      <%= link_to admin_companies_path, 
+          class: "px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 #{'bg-gray-100' if params[:status].blank?}" do %>
+        All (<%= Company.count %>)
+      <% end %>
+      <%= link_to admin_companies_path(status: 'pending'), 
+          class: "px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-yellow-700 bg-white hover:bg-yellow-50 #{'bg-yellow-100' if params[:status] == 'pending'}" do %>
+        Pending (<%= @pending_count %>)
+      <% end %>
+      <%= link_to admin_companies_path(status: 'approved'), 
+          class: "px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50 #{'bg-green-100' if params[:status] == 'approved'}" do %>
+        Approved (<%= @approved_count %>)
+      <% end %>
+      <%= link_to admin_companies_path(status: 'rejected'), 
+          class: "px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50 #{'bg-red-100' if params[:status] == 'rejected'}" do %>
+        Rejected (<%= @rejected_count %>)
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-md">
+    <% if @companies.any? %>
+      <ul class="divide-y divide-gray-200">
+        <% @companies.each do |company| %>
+          <li>
+            <div class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-12 w-12">
+                    <% if company.logo.attached? %>
+                      <%= image_tag company.logo, class: "h-12 w-12 rounded-full object-cover" %>
+                    <% else %>
+                      <div class="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="text-sm font-medium text-gray-700"><%= company.name.first.upcase %></span>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="ml-4">
+                    <div class="flex items-center">
+                      <h3 class="text-lg font-medium text-gray-900"><%= company.name %></h3>
+                      <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                   <%= case company.status
+                                       when 'pending' then 'bg-yellow-100 text-yellow-800'
+                                       when 'approved' then 'bg-green-100 text-green-800'
+                                       when 'rejected' then 'bg-red-100 text-red-800'
+                                       end %>">
+                        <%= company.status&.humanize || "N/A" %>
+                      </span>
+                    </div>
+                    <p class="text-sm text-gray-500">
+                      <%= company.location %> • <%= company.industry %> • <%= company.size %>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                      <%= pluralize(company.recruiters.count, 'recruiter') %> • 
+                      <%= pluralize(company.jobs.count, 'job') %> • 
+                      Registered <%= company.created_at.strftime('%B %d, %Y') %>
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <% if company.pending? %>
+                    <%= link_to "Approve Company", approve_admin_company_path(company), data: { turbo_method: :patch, turbo_confirm: "Are you sure?" },
+                        class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700" %>
+                    <%= link_to "Reject Company", reject_admin_company_path(company), data: { turbo_method: :patch, turbo_confirm: "Are you sure?" },
+                        class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700" %>
+                  <% end %>
+                  <%= link_to "View Details", admin_company_path(company),
+                      class: "inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+                </div>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      
+      <div class="px-4 py-3 bg-gray-50">
+        <%= paginate @companies if respond_to?(:paginate) %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No companies found</h3>
+        <p class="mt-1 text-sm text-gray-500">
+          <% if params[:status].present? %>
+            No companies with status "<%= params[:status] %>" found.
+          <% else %>
+            No companies have been registered yet.
+          <% end %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>

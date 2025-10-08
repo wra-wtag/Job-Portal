@@ -1,0 +1,269 @@
+<div class="px-4 py-6 sm:px-0">
+  <div class="border-4 border-dashed border-gray-200 rounded-lg">
+    <div class="p-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
+      
+      <!-- Statistics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Users Stats -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Total Users</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @stats[:total_users] %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-5 py-3">
+            <div class="text-sm">
+              <span class="text-gray-600">Job Seekers: <%= @stats[:job_seekers] %></span>
+              <span class="mx-2">•</span>
+              <span class="text-gray-600">Recruiters: <%= @stats[:recruiters] %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Companies Stats -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Companies</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @stats[:approved_companies] %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-5 py-3">
+            <div class="text-sm">
+              <% if @stats[:pending_companies] > 0 %>
+                <%= link_to admin_companies_path(status: 'pending'), class: "text-yellow-600 hover:text-yellow-900" do %>
+                  <%= @stats[:pending_companies] %> Pending Approval
+                <% end %>
+              <% else %>
+                <span class="text-green-600">All companies approved</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jobs Stats -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Active Jobs</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @stats[:published_jobs] %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-5 py-3">
+            <div class="text-sm">
+              <span class="text-gray-600">Total: <%= @stats[:total_jobs] %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Applications Stats -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Applications</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @stats[:total_applications] %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-5 py-3">
+            <div class="text-sm">
+              <span class="text-gray-600">Recent activity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Recruiter Requests</dt>
+                <dd class="text-lg font-medium text-gray-900"><%= @stats[:pending_recruiter_requests] %></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-5 py-3">
+          <div class="text-sm">
+            <% if @stats[:pending_recruiter_requests] > 0 %>
+              <%= link_to admin_recruiter_requests_path, class: "font-medium text-indigo-600 hover:text-indigo-500" do %>
+                Review pending requests
+              <% end %>
+            <% else %>
+              <span class="text-green-600">No pending requests</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Pending Recruiter Requests Section -->
+      <% if @pending_recruiter_requests.any? %>
+      <div class="bg-white shadow overflow-hidden sm:rounded-md mb-8">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">Pending Recruiter Requests</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">Standard recruiters waiting for company approval</p>
+        </div>
+        <ul class="divide-y divide-gray-200">
+          <% @pending_recruiter_requests.each do |request| %>
+            <li>
+              <div class="px-4 py-4 sm:px-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span class="text-sm font-medium text-gray-700"><%= request.user.first_name.first %></span>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900"><%= request.user.full_name %></div>
+                      <div class="text-sm text-gray-500">
+                        Wants to join <%= request.company.name %> as <%= request.role.humanize %>
+                      </div>
+                      <div class="text-xs text-gray-400">
+                        Requested <%= time_ago_in_words(request.created_at) %> ago
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex space-x-2">
+                    <%= link_to "View Details", admin_recruiter_request_path(request), 
+                        class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+
+      <!-- Pending Companies (if any) -->
+      <% if @pending_companies.any? %>
+      <div class="bg-white shadow overflow-hidden sm:rounded-md mb-8">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">Pending Company Approvals</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">Companies waiting for approval</p>
+        </div>
+        <ul class="divide-y divide-gray-200">
+          <% @pending_companies.each do |company| %>
+            <li>
+              <div class="px-4 py-4 sm:px-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                      <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="text-sm font-medium text-gray-700"><%= company.name.first %></span>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900"><%= company.name %></div>
+                      <div class="text-sm text-gray-500"><%= company.location %> • <%= company.industry %></div>
+                    </div>
+                  </div>
+                  <div class="flex space-x-2">
+                    <%= link_to "Review", admin_company_path(company), 
+                        class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+            <div class="space-y-3">
+              <%= link_to admin_users_path, class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" do %>
+                Manage Users
+              <% end %>
+              <%= link_to admin_companies_path(status: 'pending'), class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" do %>
+                Review Pending Companies
+              <% end %>
+              <%= link_to admin_jobs_path, class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" do %>
+                Monitor Jobs
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Users</h3>
+            <div class="space-y-3">
+              <% @recent_users.limit(5).each do |user| %>
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 bg-gray-300 rounded-full flex items-center justify-center">
+                    <span class="text-xs font-medium text-gray-700"><%= user.first_name.first %></span>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900"><%= user.full_name %></p>
+                    <p class="text-xs text-gray-500"><%= user.role.humanize %></p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Jobs</h3>
+            <div class="space-y-3">
+              <% @recent_jobs.limit(5).each do |job| %>
+                <div>
+                  <p class="text-sm font-medium text-gray-900"><%= truncate(job.title, length: 30) %></p>
+                  <p class="text-xs text-gray-500"><%= job.company.name %> • <%= job.status.humanize %></p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
