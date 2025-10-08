@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get "analytics/index"
     resources :recruiter_requests, only: [ :index, :show ] do
       member do
         patch :approve
