@@ -28,11 +28,28 @@ Rails.application.routes.draw do
 
   resources :bookmarks, only: [ :index, :destroy ]
 
+  get "recruiter/pending", to: "recruiter_onboarding#pending", as: "recruiter_pending"
+  get "recruiter/onboarding", to: "recruiter_onboarding#index", as: "recruiter_onboarding"
+  get "recruiter/onboarding/join_company", to: "recruiter_onboarding#join_company", as: "join_company_recruiter_onboarding"
+  post "recruiter/onboarding/submit_request", to: "recruiter_onboarding#submit_request"
+
   namespace :recruiter do
     get "dashboard", to: "dashboard#index"
-    resources :companies, except: [ :index ] do
-      resources :jobs do
-        resources :applications, only: [ :index, :show, :update ]
+
+    resources :jobs do
+      member do
+        patch :toggle_status
+      end
+    end
+
+    resources :applications, only: [ :index, :show, :update ]
+    resources :companies, only: [ :show, :edit, :update ]
+
+    resources :team, only: [ :index ] do
+      member do
+        patch :approve_request
+        patch :reject_request
+        delete :remove_recruiter
       end
     end
   end
@@ -46,6 +63,8 @@ Rails.application.routes.draw do
     end
 
     get "dashboard", to: "dashboard#index"
+    get "analytics", to: "analytics#index"
+
     resources :users
     resources :companies do
       member do
@@ -54,8 +73,20 @@ Rails.application.routes.draw do
       end
     end
     resources :jobs
+
+    resources :recruiter_requests, only: [ :index, :show ] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
   end
 
+  resources :companies, only: [ :new, :create, :edit, :update ] do
+    member do
+      get :pending_approval
+    end
+  end
   get "company/pending", to: "companies#pending_approval", as: "company_pending_approval"
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

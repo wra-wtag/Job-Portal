@@ -31,6 +31,10 @@ class JobPolicy < ApplicationPolicy
         user.present? && user.job_seeker? && record.active?
     end
 
+    def toggle_status?
+        can_manage?
+    end
+
     private
 
     def can_manage?

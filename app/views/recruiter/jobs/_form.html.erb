@@ -1,0 +1,109 @@
+<%= form_with model: job, url: recruiter_job_path(job), local: true, class: "space-y-6" do |f| %>
+  <% if job.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-md p-4">
+      <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+      <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+        <% job.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Basic Info -->
+  <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+    <div class="sm:col-span-6">
+      <%= f.label :title, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :title, required: true, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="sm:col-span-6">
+      <%= f.label :description, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_area :description, rows: 10, required: true, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+  </div>
+
+  <!-- Skills (Tag System) -->
+  <div data-controller="tags" class="mb-6">
+    <label class="block text-sm font-medium text-gray-700">Required Skills</label>
+
+    <div class="flex mt-1 gap-2">
+      <input 
+        data-tags-target="input"
+        type="text"
+        class="flex-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+        placeholder="Enter a skill and press Add">
+      <button type="button" data-action="tags#addTag" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+        Add
+      </button>
+    </div>
+
+    <div data-tags-target="tagsContainer" class="mt-2 flex flex-wrap gap-2">
+      <% @job.skills.each do |skill| %>
+        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full flex items-center gap-2">
+          <%= skill.name %>
+          <button type="button" data-action="tags#removeTag" class="text-indigo-700 font-bold">×</button>
+          <input type="hidden" name="skills[]" value="<%= skill.name %>">
+        </span>
+      <% end %>
+    </div>
+
+    <p class="mt-1 text-sm text-gray-500">Add or remove skills as needed. Multi-word skills are supported.</p>
+  </div>
+
+  <!-- Job Details -->
+  <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+    <div class="sm:col-span-3">
+      <%= f.label :employment_type, "Employment Type", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :employment_type,
+    Job.employment_types.keys.map { |type| [type.humanize, type] },
+    { prompt: 'Select type' },
+    class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500",
+    required: true %>
+
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= f.label :location, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :location, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="sm:col-span-2">
+      <%= f.label :salary_min, "Minimum Salary", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :salary_min, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="sm:col-span-2">
+      <%= f.label :salary_max, "Maximum Salary", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :salary_max, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="sm:col-span-2">
+      <%= f.label :currency, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :currency, [['USD', 'USD'], ['EUR', 'EUR'], ['GBP', 'GBP']], { selected: 'USD' }, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= f.label :application_deadline, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :application_deadline, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= f.label :expires_at, "Job Expires On", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :expires_at, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="sm:col-span-6">
+      <div class="flex items-center">
+        <%= f.check_box :is_remote, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %>
+        <%= f.label :is_remote, "Remote Position", class: "ml-2 block text-sm text-gray-900" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-between pt-6 border-t border-gray-200">
+    <%= link_to "Cancel", recruiter_jobs_path, class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+    <%= f.submit "Update Job", class: "px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+  </div>
+<% end %>

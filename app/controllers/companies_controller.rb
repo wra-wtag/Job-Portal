@@ -2,6 +2,7 @@ class CompaniesController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_recruiter!, except: [ :pending_approval ]
   skip_before_action :authenticate_user!, only: [ :pending_approval ]
+  before_action :redirect_to_onboarding, only: [ :pending_approval ]
 
   def new
     @company = Company.new
@@ -65,5 +66,11 @@ class CompaniesController < ApplicationController
 
   def company_params
     params.require(:company).permit(:name, :description, :location, :website, :industry, :size, :logo)
+  end
+
+  def redirect_to_onboarding
+    unless current_user.has_any_recruiter_requests?
+      redirect_to recruiter_onboarding_path
+    end
   end
 end

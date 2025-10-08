@@ -1,0 +1,170 @@
+<!-- app/views/recruiter/applications/show.html.erb -->
+<div class="max-w-4xl mx-auto py-8">
+  <div class="mb-6">
+    <%= link_to recruiter_applications_path, class: "text-indigo-600 hover:text-indigo-900" do %>
+      ← Back to Applications
+    <% end %>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <!-- Header -->
+    <div class="px-4 py-5 sm:px-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Application Details</h1>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            Application for <%= @application.job.title %>
+          </p>
+        </div>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
+                     <%= case @application.status
+                         when 'applied' then 'bg-blue-100 text-blue-800'
+                         when 'viewed' then 'bg-yellow-100 text-yellow-800'
+                         when 'shortlisted' then 'bg-green-100 text-green-800'
+                         when 'rejected' then 'bg-red-100 text-red-800'
+                         when 'hired' then 'bg-purple-100 text-purple-800'
+                         end %>">
+          <%= @application.status.humanize %>
+        </span>
+      </div>
+    </div>
+
+    <!-- Application Content -->
+    <div class="border-t border-gray-200">
+      <dl>
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Applicant</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-12 w-12 bg-gray-300 rounded-full flex items-center justify-center">
+                <span class="text-sm font-medium text-gray-700">
+                  <%= @application.user.first_name.first %><%= @application.user.last_name.first %>
+                </span>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900"><%= @application.user.full_name %></div>
+                <div class="text-sm text-gray-500"><%= @application.user.email %></div>
+                <% if @application.user.location.present? %>
+                  <div class="text-sm text-gray-500">
+                    <svg class="inline h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <%= @application.user.location %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </dd>
+        </div>
+        
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Job</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= link_to @application.job.title, recruiter_job_path(@application.job), class: "text-indigo-600 hover:text-indigo-900 font-medium" %>
+            <p class="text-sm text-gray-500">
+              <%= @application.job.location %> • <%= @application.job.employment_type.humanize %>
+            </p>
+          </dd>
+        </div>
+        
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Applied Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= @application.applied_at.strftime('%B %d, %Y at %I:%M %p') %>
+            <span class="text-gray-500">(<%= time_ago_in_words(@application.applied_at) %> ago)</span>
+          </dd>
+        </div>
+        
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Current Status</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <div class="flex items-center">
+              <span class="flex-shrink-0 h-2 w-2 rounded-full 
+                           <%= case @application.status
+                               when 'applied' then 'bg-blue-400'
+                               when 'viewed' then 'bg-yellow-400'
+                               when 'shortlisted' then 'bg-green-400'
+                               when 'rejected' then 'bg-red-400'
+                               when 'hired' then 'bg-purple-400'
+                               end %>"></span>
+              <span class="ml-2 text-sm font-medium text-gray-900">
+                <%= @application.status.humanize %>
+              </span>
+            </div>
+          </dd>
+        </div>
+        
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Cover Letter</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <div class="prose max-w-none">
+              <%= simple_format(@application.cover_letter) %>
+            </div>
+          </dd>
+        </div>
+
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Resume</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <% if @application.resume.attached? %>
+              <div class="flex items-center">
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+                <span class="ml-2 flex-1 text-sm text-gray-900">
+                  <%= @application.resume.filename %>
+                  <span class="text-gray-500">
+                    (<%= number_to_human_size(@application.resume.byte_size) %>)
+                  </span>
+                </span>
+                <%= link_to "Download", rails_blob_path(@application.resume, disposition: "attachment"), 
+                    class: "ml-4 font-medium text-indigo-600 hover:text-indigo-500" %>
+              </div>
+            <% elsif @application.user.resume.attached? %>
+              <div class="flex items-center">
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+                <span class="ml-2 flex-1 text-sm text-gray-900">
+                  <%= @application.user.resume.filename %> (Profile Resume)
+                  <span class="text-gray-500">
+                    (<%= number_to_human_size(@application.user.resume.byte_size) %>)
+                  </span>
+                </span>
+                <%= link_to "Download", rails_blob_path(@application.user.resume, disposition: "attachment"), 
+                    class: "ml-4 font-medium text-indigo-600 hover:text-indigo-500" %>
+              </div>
+            <% else %>
+              <span class="text-gray-500">No resume uploaded</span>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Update Status Section -->
+  <div class="mt-8 bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Update Application Status</h3>
+      <div class="flex flex-wrap gap-3">
+        <%= link_to "Mark as Viewed", recruiter_application_path(@application, application: { status: 'viewed' }), 
+            data: { turbo_method: :patch }, 
+            class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+        
+        <%= link_to "Shortlist Candidate", recruiter_application_path(@application, application: { status: 'shortlisted' }), 
+            data: { turbo_method: :patch }, 
+            class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700" %>
+        
+        <%= link_to "Reject Application", recruiter_application_path(@application, application: { status: 'rejected' }), 
+            data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reject this application?" }, 
+            class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700" %>
+        
+        <%= link_to "Mark as Hired", recruiter_application_path(@application, application: { status: 'hired' }), 
+            data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to mark this applicant as hired?" }, 
+            class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700" %>
+      </div>
+    </div>
+  </div>
+</div>

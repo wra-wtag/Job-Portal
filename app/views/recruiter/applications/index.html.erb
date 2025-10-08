@@ -1,0 +1,219 @@
+<!-- app/views/recruiter/applications/index.html.erb -->
+<div class="px-4 py-6 sm:px-0">
+  <!-- Header -->
+  <div class="md:flex md:items-center md:justify-between mb-8">
+    <div class="flex-1 min-w-0">
+      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        Applications
+      </h1>
+      <p class="mt-1 text-sm text-gray-500">
+        Manage all applications for your company's job postings
+      </p>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-6 mb-8">
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Total</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @stats[:total] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= link_to recruiter_applications_path(status: 'applied'), class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-blue-500 truncate">Applied</dt>
+                <dd class="text-lg font-medium text-blue-900"><%= @stats[:applied] %></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to recruiter_applications_path(status: 'viewed'), class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-yellow-500 truncate">Viewed</dt>
+                <dd class="text-lg font-medium text-yellow-900"><%= @stats[:viewed] %></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to recruiter_applications_path(status: 'shortlisted'), class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-green-500 truncate">Shortlisted</dt>
+                <dd class="text-lg font-medium text-green-900"><%= @stats[:shortlisted] %></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to recruiter_applications_path(status: 'rejected'), class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-red-500 truncate">Rejected</dt>
+                <dd class="text-lg font-medium text-red-900"><%= @stats[:rejected] %></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to recruiter_applications_path(status: 'hired'), class: "block" do %>
+      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-purple-500 truncate">Hired</dt>
+                <dd class="text-lg font-medium text-purple-900"><%= @stats[:hired] %></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white shadow sm:rounded-lg mb-6">
+    <div class="px-4 py-5 sm:p-6">
+      <%= form_with url: recruiter_applications_path, method: :get, local: true, class: "grid grid-cols-1 gap-4 sm:grid-cols-3" do |f| %>
+        <div>
+          <%= f.label :status, "Filter by Status", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.select :status, 
+              [['All Statuses', ''], ['Applied', 'applied'], ['Viewed', 'viewed'], 
+               ['Shortlisted', 'shortlisted'], ['Rejected', 'rejected'], ['Hired', 'hired']],
+              { selected: params[:status] },
+              { class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" } %>
+        </div>
+
+        <div>
+          <%= f.label :job_id, "Filter by Job", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.select :job_id, 
+              options_for_select([['All Jobs', '']] + @company_jobs, params[:job_id]),
+              {},
+              { class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" } %>
+        </div>
+
+        <div class="flex items-end">
+          <%= f.submit "Apply Filters", class: "w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Applications List -->
+  <div class="bg-white shadow overflow-hidden sm:rounded-md">
+    <% if @applications.any? %>
+      <ul class="divide-y divide-gray-200">
+        <% @applications.each do |application| %>
+          <li class="hover:bg-gray-50">
+            <div class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center flex-1">
+                  <div class="flex-shrink-0 h-12 w-12">
+                    <div class="h-12 w-12 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span class="text-sm font-medium text-gray-700">
+                        <%= application.user.first_name.first %><%= application.user.last_name.first %>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ml-4 flex-1">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h3 class="text-sm font-medium text-indigo-600">
+                          <%= link_to application.user.full_name, recruiter_application_path(application), class: "hover:underline" %>
+                        </h3>
+                        <p class="text-sm text-gray-500">
+                          Applied for 
+                          <%= link_to application.job.title, recruiter_job_path(application.job), class: "text-indigo-600 hover:underline" %>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                          <%= application.user.email %>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="mt-2 sm:flex sm:justify-between">
+                      <div class="sm:flex">
+                        <p class="flex items-center text-sm text-gray-500">
+                          Applied <%= time_ago_in_words(application.applied_at) %> ago
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="ml-6 flex items-center space-x-4">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                               <%= case application.status
+                                   when 'applied' then 'bg-blue-100 text-blue-800'
+                                   when 'viewed' then 'bg-yellow-100 text-yellow-800'
+                                   when 'shortlisted' then 'bg-green-100 text-green-800'
+                                   when 'rejected' then 'bg-red-100 text-red-800'
+                                   when 'hired' then 'bg-purple-100 text-purple-800'
+                                   end %>">
+                    <%= application.status.humanize %>
+                  </span>
+                  
+                  <%= link_to "View Details", recruiter_application_path(application),
+                      class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+                </div>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      
+      <div class="px-4 py-3 bg-gray-50">
+        <%= paginate @applications if respond_to?(:paginate) %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No applications found</h3>
+        <p class="mt-1 text-sm text-gray-500">
+          <% if params[:status].present? || params[:job_id].present? %>
+            No applications match your current filters.
+          <% else %>
+            No applications have been received yet for your jobs.
+          <% end %>
+        </p>
+        <div class="mt-6">
+          <%= link_to "View All Jobs", recruiter_jobs_path, 
+              class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

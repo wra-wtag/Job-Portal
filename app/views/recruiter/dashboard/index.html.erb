@@ -1,0 +1,334 @@
+<div class="px-4 py-6 sm:px-0">
+  <!-- Header -->
+  <div class="md:flex md:items-center md:justify-between mb-8">
+    <div class="flex-1 min-w-0">
+      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        Dashboard
+      </h1>
+      <p class="mt-1 text-sm text-gray-500">
+        Welcome back! Here's what's happening with your job postings.
+      </p>
+    </div>
+    <div class="mt-4 flex md:mt-0 md:ml-4">
+      <%= link_to new_recruiter_job_path,
+          class: "ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+        <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Post New Job
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+    <!-- Total Jobs -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Total Jobs</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @stats[:total_jobs] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <%= link_to recruiter_jobs_path, class: "font-medium text-indigo-600 hover:text-indigo-500" do %>
+            View all jobs
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Published Jobs -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Published</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @stats[:published_jobs] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <%= link_to recruiter_jobs_path(status: 'published'), class: "font-medium text-indigo-600 hover:text-indigo-500" do %>
+            View published
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Draft Jobs -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Draft Jobs</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @stats[:draft_jobs] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <%= link_to recruiter_jobs_path(status: 'draft'), class: "font-medium text-indigo-600 hover:text-indigo-500" do %>
+            View drafts
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Applications -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Applications</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @stats[:total_applications] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <span class="text-indigo-600 font-medium"><%= @stats[:new_applications] %></span>
+          <span class="text-gray-500"> new</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if @is_manager %>
+  <!-- Team Management Stats (add after existing stats cards) -->
+  <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
+    <div class="p-5">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </div>
+        <div class="ml-5 w-0 flex-1">
+          <dl>
+            <dt class="text-sm font-medium text-gray-500 truncate">Team Members</dt>
+            <dd class="text-lg font-medium text-gray-900"><%= @team_stats[:total_recruiters] %></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gray-50 px-5 py-3">
+      <div class="text-sm">
+        <% if @team_stats[:pending_requests] > 0 %>
+          <%= link_to recruiter_team_index_path, class: "font-medium text-indigo-600 hover:text-indigo-500" do %>
+            <%= @team_stats[:pending_requests] %> pending requests
+          <% end %>
+        <% else %>
+          <span class="text-green-600">No pending requests</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Team Requests Section -->
+  <% if @pending_team_requests.any? %>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mt-8">
+      <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+        <div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">Pending Team Requests</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">New recruiters want to join your team</p>
+        </div>
+        <%= link_to "Manage All", recruiter_team_index_path, 
+            class: "text-indigo-600 hover:text-indigo-900 font-medium" %>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @pending_team_requests.each do |request| %>
+          <li class="px-4 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center">
+                  <span class="text-sm font-medium text-gray-700">
+                    <%= request.user.first_name.first %><%= request.user.last_name.first %>
+                  </span>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-900"><%= request.user.full_name %></p>
+                  <p class="text-sm text-gray-500"><%= request.user.email %></p>
+                  <p class="text-xs text-gray-400">
+                    Applied <%= time_ago_in_words(request.created_at) %> ago
+                  </p>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <%= link_to "Review", recruiter_team_index_path, 
+                    class: "text-indigo-600 hover:text-indigo-900 text-sm font-medium" %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>
+
+  <!-- Two Column Layout -->
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+    <!-- Recent Jobs -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Jobs</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Your most recently posted jobs</p>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @recent_jobs.each do |job| %>
+          <li class="px-4 py-4 sm:px-6">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div>
+                  <p class="text-sm font-medium text-indigo-600 truncate">
+                    <%= link_to job.title, recruiter_job_path(job), class: "hover:underline" %>
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    <%= job.location %> • 
+                    <%= job.employment_type.humanize %> • 
+                    <%= pluralize(job.applications_count, 'application') %>
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                             <%= case job.status
+                                 when 'draft' then 'bg-gray-100 text-gray-800'
+                                 when 'published' then 'bg-green-100 text-green-800'
+                                 when 'closed' then 'bg-red-100 text-red-800'
+                                 end %>">
+                  <%= job.status.humanize %>
+                </span>
+              </div>
+            </div>
+          </li>
+        <% end %>
+        
+        <% if @recent_jobs.empty? %>
+          <li class="px-4 py-4 sm:px-6 text-center text-gray-500">
+            No jobs posted yet.
+            <%= link_to "Post your first job", new_recruiter_job_path, class: "text-indigo-600 hover:text-indigo-500 font-medium ml-1" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <!-- Recent Applications -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Applications</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Latest applications to your jobs</p>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @recent_applications.limit(5).each do |application| %>
+          <li class="px-4 py-4 sm:px-6">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center">
+                  <span class="text-sm font-medium text-gray-700">
+                    <%= application.user.first_name.first %><%= application.user.last_name.first %>
+                  </span>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-900">
+                    <%= link_to application.user.full_name, recruiter_application_path(application), class: "hover:underline" %>
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    Applied for <%= application.job.title %>
+                  </p>
+                  <p class="text-xs text-gray-400">
+                    <%= time_ago_in_words(application.applied_at) %> ago
+                  </p>
+                </div>
+              </div>
+              <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                             <%= case application.status
+                                 when 'applied' then 'bg-blue-100 text-blue-800'
+                                 when 'viewed' then 'bg-yellow-100 text-yellow-800'
+                                 when 'shortlisted' then 'bg-green-100 text-green-800'
+                                 when 'rejected' then 'bg-red-100 text-red-800'
+                                 when 'hired' then 'bg-purple-100 text-purple-800'
+                                 end %>">
+                  <%= application.status.humanize %>
+                </span>
+              </div>
+            </div>
+          </li>
+        <% end %>
+        
+        <% if @recent_applications.empty? %>
+          <li class="px-4 py-4 sm:px-6 text-center text-gray-500">
+            No applications yet. 
+            <%= link_to "Post a job", new_recruiter_job_path, class: "text-indigo-600 hover:text-indigo-500 font-medium ml-1" %>
+            to start receiving applications.
+          </li>
+        <% end %>
+      </ul>
+      
+      <% if @recent_applications.count > 5 %>
+        <div class="bg-gray-50 px-4 py-3">
+          <%= link_to "View all applications", recruiter_applications_path, 
+              class: "text-sm font-medium text-indigo-600 hover:text-indigo-500" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Charts Section (Optional - can be added later) -->
+  <% if @job_views_data.any? %>
+    <div class="mt-8 bg-white shadow sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Job Performance</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Views for your published jobs</p>
+      </div>
+      <div class="px-4 py-4">
+        <div class="space-y-3">
+          <% @job_views_data.each do |job_title, views| %>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-900"><%= job_title %></span>
+              <div class="flex items-center">
+                <div class="w-32 bg-gray-200 rounded-full h-2 mr-3">
+                  <% width_percentage = @max_views > 0 ? (views.to_f / @max_views * 100) : 0 %>
+                  <div class="bg-indigo-600 h-2 rounded-full" style="width: <%= [width_percentage, 5].max %>%"></div>
+                </div>
+                <span class="text-sm text-gray-500"><%= views %> views</span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

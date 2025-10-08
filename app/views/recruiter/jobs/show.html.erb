@@ -1,0 +1,89 @@
+<div class="max-w-7xl mx-auto py-8">
+  <!-- Job Header -->
+  <div class="bg-white shadow sm:rounded-lg p-6 mb-6">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2"><%= @job.title %></h1>
+        <p class="text-gray-600">
+          <strong>Type:</strong> <%= @job.employment_type.humanize %> |
+          <strong>Location:</strong> <%= @job.location %> 
+          <% if @job.is_remote %>• <span class="text-green-600">Remote</span><% end %>
+        </p>
+        <% if @job.salary_range.present? %>
+          <p class="text-gray-600 mt-1"><strong>Salary:</strong> <%= @job.salary_range %></p>
+        <% end %>
+        <% if @job.application_deadline.present? %>
+          <p class="text-gray-600 mt-1"><strong>Apply By:</strong> <%= @job.application_deadline.strftime("%B %d, %Y") %></p>
+        <% end %>
+        <p class="mt-1 text-sm text-gray-500">Status: <%= @job.status.humanize %></p>
+      </div>
+
+      <div class="flex space-x-2">
+        <%= link_to 'Edit', edit_recruiter_job_path(@job), class: "px-3 py-2 bg-yellow-400 text-white rounded-md hover:bg-yellow-500" %>
+        <%= button_to 'Delete', recruiter_job_path(@job), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" %>
+        <%= button_to (@job.status == 'published' ? 'Close Job' : 'Publish Job'), toggle_status_recruiter_job_path(@job), method: :patch, class: "px-3 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" %>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <% if @job.skills.any? %>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <% @job.skills.each do |skill| %>
+          <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full"><%= skill.name %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Job Description -->
+  <div class="bg-white shadow sm:rounded-lg p-6 mb-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-2">Job Description</h2>
+    <div class="prose max-w-none">
+      <%= simple_format(@job.description) %>
+    </div>
+  </div>
+
+  <!-- Application Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <% @application_stats.each do |status, count| %>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+        <p class="text-gray-500 text-sm font-medium"><%= status.to_s.humanize %></p>
+        <p class="text-2xl font-bold text-gray-900"><%= count %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Applications Table -->
+  <div class="bg-white shadow sm:rounded-lg p-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Applications</h2>
+
+    <% if @applications.any? %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Applicant</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Email</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Status</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Applied At</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @applications.each do |application| %>
+            <tr>
+              <td class="px-4 py-2 text-gray-900"><%= application.user.full_name %></td>
+              <td class="px-4 py-2 text-gray-500"><%= application.user.email %></td>
+              <td class="px-4 py-2 text-gray-700"><%= application.status.humanize %></td>
+              <td class="px-4 py-2 text-gray-500"><%= application.applied_at.strftime("%B %d, %Y %H:%M") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <div class="mt-4">
+        <%= paginate @applications %>
+      </div>
+    <% else %>
+      <p class="text-gray-500">No applications yet for this job.</p>
+    <% end %>
+  </div>
+</div>

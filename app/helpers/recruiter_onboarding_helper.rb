@@ -1,0 +1,2 @@
+module RecruiterOnboardingHelper
+end
