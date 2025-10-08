@@ -44,8 +44,9 @@
           </div>
           
           <div class="hidden sm:ml-6 sm:flex sm:items-center">
+          <%= render 'shared/notification_badge' %>
             <!-- Company info -->
-            <div class="flex items-center mr-4">
+            <div class="ml-3 flex items-center mr-4">
               <% if current_company&.logo&.attached? %>
                 <%= image_tag current_company.logo, class: "h-8 w-8 rounded-full mr-2" %>
               <% end %>

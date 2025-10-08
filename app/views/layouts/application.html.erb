@@ -42,6 +42,7 @@
             </div>
 
             <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <%= render 'shared/notification_badge' %>
               <% if user_signed_in? %>
                 <div class="ml-3 relative">
                   <span class="text-gray-700 text-sm mr-4">Hello, <%= current_user.first_name %></span>
