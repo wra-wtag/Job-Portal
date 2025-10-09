@@ -1,5 +1,24 @@
 Rails.application.routes.draw do
-  mount Api::Root => "/"
+  namespace :api do
+    namespace :v1 do
+      post "auth/signup", to: "authentication#signup"
+      post "auth/login", to: "authentication#login"
+      delete "auth/logout", to: "authentication#logout"
+      get "auth/me", to: "authentication#me"
+
+      resources :jobs, only: [ :index, :show ] do
+        member do
+          post :apply
+        end
+      end
+
+      resources :companies, only: [ :index, :show ]
+
+      resources :applications, only: [ :index, :show ]
+
+      resource :profile, only: [ :show, :update ], controller: "profiles"
+    end
+  end
   devise_for :users, controllers: {
     registrations: "users/registrations",
     sessions: "users/sessions",

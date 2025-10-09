@@ -28,6 +28,16 @@ require "database_cleaner/active_record"
 #
 Rails.root.glob("spec/support/**/*.rb").sort_by(&:to_s).each { |f| require f }
 
+module AuthHelper
+  def auth_headers(user)
+    token = JsonWebToken.encode(user_id: user.id)
+    { "Authorization" => "Bearer #{token}" }
+  end
+
+  def json_response
+    JSON.parse(response.body, symbolize_names: true)
+  end
+end
 # Ensures that the test database schema matches the current schema file.
 # If there are pending migrations it will invoke `db:test:prepare` to
 # recreate the test database by loading the schema.
@@ -60,7 +70,10 @@ RSpec.configure do |config|
   #
   # The different available types are documented in the features, such as in
   # https://rspec.info/features/8-0/rspec-rails
-  #
+  # include auth helpers in request specs
+  config.include AuthHelper, type: :request
+
+
   # You can also this infer these behaviours automatically by location, e.g.
   # /spec/models would pull in the same behaviour as `type: :model` but this
   # behaviour is considered legacy and will be removed in a future version.

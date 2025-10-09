@@ -40,18 +40,21 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+gem "active_model_serializers", "~> 0.10.2"
 gem "devise"
 gem "email_validator"
 gem "grape"
 gem "groupdate"
+gem "jwt"
 gem "kaminari"
 gem "mini_magick"
 gem "phony_rails"
+gem "pundit"
+gem "rack-cors"
+gem "redis"
 gem "sidekiq"
 gem "sidekiq-cron"
 gem "tailwindcss-rails"
-gem "pundit"
-gem "redis"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
