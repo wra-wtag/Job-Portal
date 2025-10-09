@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      # Authentication
       post "auth/signup", to: "authentication#signup"
       post "auth/login", to: "authentication#login"
       delete "auth/logout", to: "authentication#logout"
       get "auth/me", to: "authentication#me"
 
-      # Resources (we'll add these in next parts)
       resources :jobs, only: [ :index, :show ] do
         member do
           post :apply
@@ -18,8 +16,7 @@ Rails.application.routes.draw do
 
       resources :applications, only: [ :index, :show ]
 
-      # Profile
-      resource :profile, only: [ :show, :update ]
+      resource :profile, only: [ :show, :update ], controller: "profiles"
     end
   end
   devise_for :users, controllers: {
