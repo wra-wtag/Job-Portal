@@ -20,7 +20,7 @@ module Api
                         message: "Profile updated successfully"
                     })
                 else
-                    render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
+                    render json: { errors: current_user.errors.full_messages }, status: :unprocessable_content
                 end
             end
 

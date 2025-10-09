@@ -39,7 +39,7 @@ module Api
         render json: { error: message }, status: :unauthorized
       end
 
-      def render_error(message, status = :unprocessable_entity)
+      def render_error(message, status = :unprocessable_content)
         render json: { error: message }, status: status
       end
 
@@ -54,7 +54,7 @@ module Api
       end
 
       def record_invalid(exception)
-        render json: { error: exception.record.errors.full_messages }, status: :unprocessable_entity
+        render json: { error: exception.record.errors.full_messages }, status: :unprocessable_content
       end
 
       def user_not_authorized

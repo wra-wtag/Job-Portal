@@ -50,7 +50,7 @@ module Api
                 end
 
                 if current_user.applications.exists?(job: job)
-                    return render_error("You have already applied for this job", :unprocessable_entity)
+                    return render_error("You have already applied for this job", :unprocessable_content)
                 end
 
                 application = current_user.applications.build(
@@ -83,7 +83,7 @@ module Api
                         :created
                     )
                 else
-                    render json: { errors: application.errors.full_messages }, status: :unprocessable_entity
+                    render json: { errors: application.errors.full_messages }, status: :unprocessable_content
                 end
             end
 
