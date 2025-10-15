@@ -6,4 +6,5 @@ class JobSkill < ApplicationRecord
 
   scope :required, -> { where(required: true) }
   scope :optional, -> { where(required: false) }
+  validates :required, inclusion: { in: [ true, false ] }
 end

@@ -7,12 +7,7 @@ class RecruiterMembership < ApplicationRecord
 
   validates :user_id, uniqueness: { scope: :company_id }
 
-  scope :managers, -> { where(role: :manager) }
-  scope :standard, -> { where(role: :standard) }
   scope :primary, -> { where(is_primary: true) }
-  scope :pending, -> { where(status: :pending) }
-  scope :approved, -> { where(status: :approved) }
-  scope :rejected, -> { where(status: :rejected) }
 
   def can_manage_recruiters?
     manager? && approved?
