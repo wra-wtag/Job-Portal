@@ -1,6 +1,6 @@
 class Notification < ApplicationRecord
   belongs_to :user
-  enum :kind, {
+  enum :type, {
     new_job_application: 0,
     application_update: 1,
     job_recommendation: 2,
@@ -15,7 +15,6 @@ class Notification < ApplicationRecord
   scope :unread, -> { where(read_at: nil) }
   scope :read, -> { where.not(read_at: nil) }
   scope :recent, -> { order(created_at: :desc) }
-  scope :by_kind, ->(kind) { where(kind: kind) }
 
   def read?
     read_at.present?
