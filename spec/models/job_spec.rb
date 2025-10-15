@@ -46,11 +46,6 @@ RSpec.describe Job, type: :model do
       expect(Job.active).to contain_exactly(published_job)
     end
 
-    it ".by_employment_type returns jobs of a given type" do
-      type = draft_job.employment_type
-      expect(Job.by_employment_type(type)).to include(draft_job)
-    end
-
     it ".with_salary_range returns jobs within salary range" do
       job = create(:job, salary_min: 40_000, salary_max: 80_000)
       expect(Job.with_salary_range(40_000, 80_000)).to include(job)

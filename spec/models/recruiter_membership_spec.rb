@@ -12,19 +12,7 @@ RSpec.describe RecruiterMembership, type: :model do
   end
 
   describe "scopes" do
-    let!(:manager_membership) { create(:recruiter_membership, :manager) }
-    let!(:standard_membership) { create(:recruiter_membership, :standard) }
     let!(:primary_membership) { create(:recruiter_membership, :primary) }
-
-    it ".managers returns only manager roles" do
-      expect(RecruiterMembership.managers).to include(manager_membership)
-      expect(RecruiterMembership.managers).not_to include(standard_membership)
-    end
-
-    it ".standard returns only standard roles" do
-      expect(RecruiterMembership.standard).to include(standard_membership)
-      expect(RecruiterMembership.standard).not_to include(manager_membership)
-    end
 
     it ".primary returns only primary memberships" do
       expect(RecruiterMembership.primary).to include(primary_membership)

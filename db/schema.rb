@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_02_052334) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_15_090130) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -69,7 +69,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_052334) do
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
-    t.string "slug"
     t.text "description"
     t.string "location"
     t.string "website"
@@ -81,6 +80,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_052334) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "status", default: 0, null: false
+    t.string "slug", null: false
     t.index ["approved_by_id"], name: "index_companies_on_approved_by_id"
     t.index ["industry"], name: "index_companies_on_industry"
     t.index ["slug"], name: "index_companies_on_slug", unique: true
@@ -89,13 +89,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_052334) do
 
   create_table "job_recommendations", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.json "payload", null: false
+    t.jsonb "payload", default: {}, null: false
     t.string "algorithm_version", null: false
     t.datetime "generated_at", null: false
     t.datetime "scheduled_for"
     t.datetime "sent_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["payload"], name: "index_job_recommendations_on_payload", using: :gin
     t.index ["scheduled_for"], name: "index_job_recommendations_on_scheduled_for"
     t.index ["user_id"], name: "index_job_recommendations_on_user_id"
   end
@@ -181,7 +182,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_052334) do
   create_table "user_skills", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "skill_id", null: false
-    t.integer "experience_years", default: 0
+    t.integer "years_of_experience", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["skill_id"], name: "index_user_skills_on_skill_id"

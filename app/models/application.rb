@@ -8,7 +8,7 @@ class Application < ApplicationRecord
   validates :status, inclusion: { in: statuses.keys }
 
   has_one_attached :resume
-  validates :resume, content_type: [ "application/pdf" ], size: { less_than: 5.megabytes, message: "must be a PDF and smaller than 5 MB" }
+  validates :resume, content_type: [ "application/pdf" ], size: { less_than: 5.megabytes, message: "must be a PDF and smaller than 5 MB" }, allow_blank: true
 
   scope :pending_review, -> { where(status: [ :applied, :viewed ]) }
 

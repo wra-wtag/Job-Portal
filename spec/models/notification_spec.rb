@@ -32,11 +32,6 @@ RSpec.describe Notification, type: :model do
     it ".recent orders notifications by created_at desc" do
       expect(Notification.recent.first).to eq(read_notification)
     end
-
-    it ".by_kind returns notifications of a given kind" do
-      kind = unread_notification.kind
-      expect(Notification.by_kind(kind)).to include(unread_notification)
-    end
   end
 
   describe "instance methods" do

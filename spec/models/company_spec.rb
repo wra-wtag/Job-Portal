@@ -2,10 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Company, type: :model do
   describe "validations" do
+    subject { create(:company) }
     it { should validate_presence_of(:name) }
     it { should validate_uniqueness_of(:name) }
     it { should validate_presence_of(:slug) }
-    it { should validate_uniqueness_of(:slug) }
+    it { should validate_uniqueness_of(:slug).case_insensitive }
     it { should validate_inclusion_of(:size).in_array(Company::SIZES).allow_blank }
     it 'validates the format of website with URI regex' do
       should allow_value('https://www.example.com').for(:website)
@@ -102,7 +103,7 @@ RSpec.describe Company, type: :model do
 
     describe "#reject!" do
       it "updates the company status to rejected" do
-        expect { company.reject! }.to change { company.status }.to('rejected')
+        expect { company.reject!(admin_user) }.to change { company.status }.to('rejected')
       end
     end
   end

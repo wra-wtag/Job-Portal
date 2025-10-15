@@ -1,6 +1,6 @@
 class Notification < ApplicationRecord
   belongs_to :user
-  enum :type, {
+  enum :kind, {
     new_job_application: 0,
     application_update: 1,
     job_recommendation: 2,

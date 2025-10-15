@@ -15,7 +15,10 @@ class Company < ApplicationRecord
 
   has_one_attached :logo
 
-  validates :logo, content_type: [ "image/png", "image/jpeg", "image/jpg" ], size: { less_than: 2.megabytes, message: "must be a PNG or JPG image smaller than 3 MB" }, allow_blank: true
+  validates :logo,
+            content_type: [ "image/png", "image/jpeg" ],
+            size: { less_than: 2.megabytes, message: "must be a PNG or JPG image smaller than 3 MB" },
+            allow_blank: true
 
   before_validation :generate_slug, if: :name_changed?
 
@@ -26,7 +29,7 @@ class Company < ApplicationRecord
     update!(status: :approved, approved_by: admin_user, approved_at: Time.current)
   end
 
-  def reject!
+  def reject!(admin_user)
     raise StandardError, "Unauthorized: Only admin users can reject companies" unless admin_user&.admin?
     raise StandardError, "Company cannot be rejected!" unless can_reject?
 
